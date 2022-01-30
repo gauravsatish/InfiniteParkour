@@ -23,8 +23,8 @@ public class ResetCommand implements CommandExecutor {
                     if (args[0].equals("slots")) {
                         player.sendMessage(ChatColor.GREEN + "Slots reset!");
                         SlotManager.getSlotsInUse().clear();
-                    } else {
-
+//                    } else if (args[0].equals("parkour")){
+//                        SlotManager.getPlayerSlotHashMap().get(player).resetBlocks();
                     }
                 } else {
                     player.sendMessage(ChatColor.RED + "Invalid Option");

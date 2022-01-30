@@ -33,8 +33,8 @@ public class TestCommand implements CommandExecutor {
                             loc1.getBlock().setType(Material.GOLD_BLOCK);
                             loc2.getBlock().setType(Material.GOLD_BLOCK);
                         }
-                    } else if (args[0].equals("parkour")) {
-                        new ParkourManager(player);
+//                    } else if (args[0].equals("parkour")) {
+//                        new ParkourManager(player, );
                     } else {
                         player.sendMessage(ChatColor.RED + "Invalid Option!");
                         player.sendMessage(ChatColor.RED + "Available Options" + ChatColor.GOLD + ":");

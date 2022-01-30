@@ -1,0 +1,8 @@
+ - Integrate existing version of parkour generator with the slot system
+ - Make the thing reversible (as in clearing all blocks once done
+ - Make it generate the blocks in real time along with the player, with a runnable with probably a 5 tick speed
+ - on disable, clear all blocks and do other stuff
+ - Add more presets, like ladder jumps, and neos
+ - make it more random. way more random
+ - make the world generator non existent
+ - make the wall generator

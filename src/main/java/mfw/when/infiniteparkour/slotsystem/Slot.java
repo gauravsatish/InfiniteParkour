@@ -5,11 +5,15 @@ public class Slot {
     private final int slotNumber;
     private final double slotStartZ;
     private final double slotEndZ;
+    private final double[] midBlockZ = new double[2];
+    private final SlotLog log = new SlotLog();
 
     public Slot(int slotNumber) {
         this.slotNumber = slotNumber;
         this.slotStartZ = slotNumber * 16;
         this.slotEndZ = ((slotNumber + 1) * 16) - 1;
+        midBlockZ[0] = slotStartZ + 7;
+        midBlockZ[1] = slotStartZ + 8;
     }
 
     public double[] getMiddleZ() {
@@ -17,6 +21,10 @@ public class Slot {
         midZs[0] = slotStartZ + 7;
         midZs[1] = slotStartZ + 8;
         return midZs;
+    }
+
+    public SlotLog getLog() {
+        return log;
     }
 
     public int getSlotNumber() {
