@@ -2,6 +2,7 @@ package mfw.when.infiniteparkour;
 
 import mfw.when.infiniteparkour.commands.InfiniteParkourCommand;
 import mfw.when.infiniteparkour.commands.ResetCommand;
+import mfw.when.infiniteparkour.commands.TPParkourCommand;
 import mfw.when.infiniteparkour.commands.TestCommand;
 import mfw.when.infiniteparkour.infparkour.ParkourManager;
 import mfw.when.infiniteparkour.listeners.PlayerManager;
@@ -48,6 +49,7 @@ public final class InfiniteParkour extends JavaPlugin {
         getCommand("infiniteparkour").setExecutor(new InfiniteParkourCommand());
         getCommand("test").setExecutor(new TestCommand());
         getCommand("reset").setExecutor(new ResetCommand());
+        getCommand("tpparkour").setExecutor(new TPParkourCommand());
 
         testCommandOptions.add("slotspacing");
 

@@ -11,3 +11,4 @@ commands:
       - infparkour
   test:
   reset:
+  tpparkour:

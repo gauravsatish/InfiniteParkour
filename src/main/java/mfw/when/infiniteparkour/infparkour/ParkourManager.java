@@ -15,10 +15,14 @@ import java.util.Random;
 
 public class ParkourManager {
 
+    private final Material TARGET_BLOCK_MATERIAL = Material.EMERALD_BLOCK;
+    private final Material SECOND_BLOCK_MATERIAL = Material.WAXED_COPPER_BLOCK;
+
     private final Random random = new Random();
     private final Player player;
     private final Slot slot;
     private Block targetBlock;
+    private Block secondBlock;
     private BukkitTask process;
 
     public ParkourManager(Player player, Slot slot) {
@@ -29,8 +33,6 @@ public class ParkourManager {
 
         InfiniteParkour.getPlayerParkourManager().put(player, this);
         InfiniteParkour.getPlugin().getLogger().info("added to hashmap");
-
-//        InfiniteParkour.getPlayerSlotHashMap().remove(player);
     }
 
     public Slot getSlot() {
@@ -44,20 +46,34 @@ public class ParkourManager {
     public void startParkourProcess() {
 
         targetBlock = getNextBlock(new Location(player.getWorld(), 0, InfiniteParkour.PARKOUR_HEIGHT, slot.getMiddleZ()[0]));
-        targetBlock.setType(Material.EMERALD_BLOCK);
-        slot.getLog().addBlock(targetBlock);
+        targetBlock.setType(TARGET_BLOCK_MATERIAL);
+        secondBlock = getNextBlock(targetBlock.getLocation());
+        secondBlock.setType(SECOND_BLOCK_MATERIAL);
+
+//        process = new BukkitRunnable() {
+//            @Override
+//            public void run() {
+//                if (player.getLocation().add(0, -1, 0).getBlock().getType().equals(Material.EMERALD_BLOCK)) {
+//                    new SyncBlockChanger(targetBlock, Material.GOLD_BLOCK).run();
+//                    targetBlock = getNextBlock(targetBlock.getLocation());
+//                    new SyncBlockChanger(targetBlock, Material.EMERALD_BLOCK).run();
+//                }
+//            }
+//        }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 0, 5);
 
         process = new BukkitRunnable() {
             @Override
             public void run() {
                 if (player.getLocation().add(0, -1, 0).getBlock().getType().equals(Material.EMERALD_BLOCK)) {
                     new SyncBlockChanger(targetBlock, Material.GOLD_BLOCK).run();
-                    targetBlock = getNextBlock(targetBlock.getLocation());
-                    slot.getLog().addBlock(targetBlock);
-                    new SyncBlockChanger(targetBlock, Material.EMERALD_BLOCK).run();
+                    new SyncBlockChanger(secondBlock, Material.EMERALD_BLOCK).run();
+                    targetBlock = secondBlock;
+                    secondBlock = getNextBlock(secondBlock.getLocation());
+                    new SyncBlockChanger(secondBlock, Material.WAXED_COPPER_BLOCK).run();
+
                 }
             }
-        }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 0, 5);
+        }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 0, 1);
     }
 
     private Block getNextBlock(Location loc) {
@@ -65,7 +81,10 @@ public class ParkourManager {
         int forwardLength = generateForwardLength();
         int offset = generateSidewaysOffset(height);
 
-        return loc.add(forwardLength, height, offset).getBlock();
+        Block block = loc.add(forwardLength, height, offset).getBlock();
+        slot.getLog().addBlock(block);
+
+        return block;
     }
 
     private int generateSidewaysOffset(int height) {
