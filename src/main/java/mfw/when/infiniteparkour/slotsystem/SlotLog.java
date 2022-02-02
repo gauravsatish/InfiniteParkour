@@ -1,18 +1,23 @@
 package mfw.when.infiniteparkour.slotsystem;
 
+import mfw.when.infiniteparkour.InfiniteParkour;
+import mfw.when.infiniteparkour.utils.SyncBlockChanger;
+import net.minecraft.world.level.block.Blocks;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
 
 public class SlotLog {
-    private ArrayList<Block> blocks = new ArrayList<>();
+    private final ArrayList<Block> blocks = new ArrayList<>();
 
     public void resetBlocks() {
         for (Block block : blocks) {
-            block.setType(Material.AIR);
+//            new SyncBlockChanger(block, Blocks.AIR).run();
+            new SyncBlockChanger(block.getLocation(), Blocks.a, Material.AIR).run();
         }
         blocks.clear();
+        InfiniteParkour.getPlugin().getLogger().info("cleared blocks");
     }
 
     public void addBlock(Block block) {

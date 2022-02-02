@@ -1,7 +1,6 @@
 package mfw.when.infiniteparkour.commands;
 
 import mfw.when.infiniteparkour.InfiniteParkour;
-import mfw.when.infiniteparkour.infparkour.ParkourManager;
 import mfw.when.infiniteparkour.slotsystem.Slot;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -11,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 public class TestCommand implements CommandExecutor {
@@ -33,14 +33,20 @@ public class TestCommand implements CommandExecutor {
                             loc1.getBlock().setType(Material.GOLD_BLOCK);
                             loc2.getBlock().setType(Material.GOLD_BLOCK);
                         }
-//                    } else if (args[0].equals("parkour")) {
-//                        new ParkourManager(player, );
+                    } else if (args[0].equals("velocity")) {
+                        if (InfiniteParkour.getVelocityTrackerProcesses().containsKey(player)) {
+                            InfiniteParkour.getVelocityTrackerProcesses().get(player).cancel();
+                        } else {
+                            BukkitTask task = new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    player.sendMessage(String.valueOf((double) Math.round(player.getVelocity().getY() * 100) / 100));
+                                }
+                            }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 0, 1);
+                            InfiniteParkour.getVelocityTrackerProcesses().put(player, task);
+                        }
                     } else {
                         player.sendMessage(ChatColor.RED + "Invalid Option!");
-                        player.sendMessage(ChatColor.RED + "Available Options" + ChatColor.GOLD + ":");
-                        for (String option : InfiniteParkour.testCommandOptions) {
-                            player.sendMessage(ChatColor.GOLD + " - " + ChatColor.RED + option);
-                        }
                     }
                 } else if (args.length == 2) {
                     if (args[0].equals("tickspeed")) {
@@ -67,8 +73,6 @@ public class TestCommand implements CommandExecutor {
                             player.sendMessage(ChatColor.RED + "Please set a valid amount of tickSpeed to wait before running again");
                             return false;
                         }
-
-
                     }
                 }
             }

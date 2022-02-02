@@ -4,6 +4,9 @@ import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.slotsystem.Slot;
 import mfw.when.infiniteparkour.slotsystem.SlotManager;
 import mfw.when.infiniteparkour.utils.SyncBlockChanger;
+import mfw.when.infiniteparkour.utils.SyncPlayerTeleport;
+import net.minecraft.world.level.block.Blocks;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,8 +18,12 @@ import java.util.Random;
 
 public class ParkourManager {
 
+    private final net.minecraft.world.level.block.Block NMS_TARGET_BLOCK = Blocks.eA;
+    private final net.minecraft.world.level.block.Block NMS_SECOND_BLOCK = Blocks.pi;
+    private final net.minecraft.world.level.block.Block NMS_PASSED_BLOCK = Blocks.bK;
     private final Material TARGET_BLOCK_MATERIAL = Material.EMERALD_BLOCK;
     private final Material SECOND_BLOCK_MATERIAL = Material.WAXED_COPPER_BLOCK;
+    private final Material PASSED_BLOCK_MATERIAL = Material.GOLD_BLOCK;
 
     private final Random random = new Random();
     private final Player player;
@@ -45,35 +52,50 @@ public class ParkourManager {
 
     public void startParkourProcess() {
 
-        targetBlock = getNextBlock(new Location(player.getWorld(), 0, InfiniteParkour.PARKOUR_HEIGHT, slot.getMiddleZ()[0]));
-        targetBlock.setType(TARGET_BLOCK_MATERIAL);
-        secondBlock = getNextBlock(targetBlock.getLocation());
-        secondBlock.setType(SECOND_BLOCK_MATERIAL);
+        new SyncPlayerTeleport(player, new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT + 1, slot.getMiddleZ()[1], -90f, 0f)).run();
 
-//        process = new BukkitRunnable() {
-//            @Override
-//            public void run() {
-//                if (player.getLocation().add(0, -1, 0).getBlock().getType().equals(Material.EMERALD_BLOCK)) {
-//                    new SyncBlockChanger(targetBlock, Material.GOLD_BLOCK).run();
-//                    targetBlock = getNextBlock(targetBlock.getLocation());
-//                    new SyncBlockChanger(targetBlock, Material.EMERALD_BLOCK).run();
-//                }
-//            }
-//        }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 0, 5);
+        targetBlock = getNextBlock(new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT, slot.getMiddleZ()[1]));
+        new SyncBlockChanger(targetBlock.getLocation(), NMS_TARGET_BLOCK, TARGET_BLOCK_MATERIAL).run();
+//        new SyncBlockChanger(targetBlock).run();
+        secondBlock = getNextBlock(targetBlock.getLocation());
+        new SyncBlockChanger(secondBlock.getLocation(), NMS_SECOND_BLOCK, SECOND_BLOCK_MATERIAL).run();
+//        new SyncBlockChanger(secondBlock).run();
 
         process = new BukkitRunnable() {
             @Override
             public void run() {
-                if (player.getLocation().add(0, -1, 0).getBlock().getType().equals(Material.EMERALD_BLOCK)) {
-                    new SyncBlockChanger(targetBlock, Material.GOLD_BLOCK).run();
-                    new SyncBlockChanger(secondBlock, Material.EMERALD_BLOCK).run();
+                if (player.getLocation().add(0, -1, 0).getBlock().getType().equals(TARGET_BLOCK_MATERIAL)) {
+                    new SyncBlockChanger(targetBlock.getLocation(), NMS_PASSED_BLOCK, PASSED_BLOCK_MATERIAL).run();
+//                    new SyncBlockChanger(targetBlock).run();
+                    new SyncBlockChanger(secondBlock.getLocation(), NMS_TARGET_BLOCK, TARGET_BLOCK_MATERIAL).run();
+//                    new SyncBlockChanger(secondBlock).run();
                     targetBlock = secondBlock;
                     secondBlock = getNextBlock(secondBlock.getLocation());
-                    new SyncBlockChanger(secondBlock, Material.WAXED_COPPER_BLOCK).run();
+                    new SyncBlockChanger(secondBlock.getLocation(), NMS_SECOND_BLOCK, SECOND_BLOCK_MATERIAL).run();
+//                    new SyncBlockChanger(secondBlock).run();
+                }
 
+                if (player.getVelocity().getY() < -2) {
+                    InfiniteParkour.getPlugin().getLogger().info("called reset");
+                    resetPlayer();
                 }
             }
-        }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 0, 1);
+        }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 0, 2);
+    }
+
+    private void resetPlayer() {
+        Bukkit.getScheduler().runTask(InfiniteParkour.getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                slot.getLog().resetBlocks();
+                process.cancel();
+                InfiniteParkour.getPlugin().getLogger().info("cancelled process");
+                InfiniteParkour.getPlugin().getLogger().info("starting process after resetting");
+                targetBlock = null;
+                secondBlock = null;
+                startParkourProcess();
+            }
+        });
     }
 
     private Block getNextBlock(Location loc) {

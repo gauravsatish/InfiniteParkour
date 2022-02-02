@@ -1,8 +1,8 @@
 package mfw.when.infiniteparkour.infparkour;
 
+import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.slotsystem.Slot;
 import mfw.when.infiniteparkour.slotsystem.SlotManager;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class InfiniteParkourInstance {
@@ -18,8 +18,7 @@ public class InfiniteParkourInstance {
 
         this.parkourManager = new ParkourManager(player, slot);
         parkourManager.startParkourProcess();
-
-        this.player.teleport(new Location(this.player.getWorld(), 0.5, 101, slot.getMiddleZ()[1], -90f, 0f));
+        InfiniteParkour.getPlugin().getLogger().info("called startParkourProcess from command");
     }
 
 }
