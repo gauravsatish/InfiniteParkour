@@ -58,8 +58,6 @@ public class ParkourManager {
 
         InfiniteParkour.getPlayerJumpCounter().put(player, 0);
 
-        new SyncPlayerTeleport(player, new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT + 1, slot.getMiddleZ()[1], -90f, 0f)).run();
-
         targetBlock = getNextBlock(new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT, slot.getMiddleZ()[1]));
         new SyncBlockChanger(targetBlock.getLocation(), NMS_TARGET_BLOCK, false).run();
         secondBlock = getNextBlock(targetBlock.getLocation());
@@ -96,7 +94,8 @@ public class ParkourManager {
                 process.cancel();
                 targetBlock = null;
                 secondBlock = null;
-                startParkourProcess();
+                new SyncPlayerTeleport(player, new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT + 1, slot.getMiddleZ()[1], -90f, 0f)).run();
+                Bukkit.getScheduler().runTaskLater(InfiniteParkour.getPlugin(), () -> startParkourProcess(), 20);
             }
         });
     }
