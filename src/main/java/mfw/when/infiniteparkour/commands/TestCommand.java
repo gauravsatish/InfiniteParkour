@@ -2,6 +2,8 @@ package mfw.when.infiniteparkour.commands;
 
 import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.slotsystem.Slot;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -44,6 +46,8 @@ public class TestCommand implements CommandExecutor {
                             }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 0, 1);
                             InfiniteParkour.getVelocityTrackerProcesses().put(player, task);
                         }
+                    } else if (args[0].equals("actionbar")) {
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.GOLD + "Action Bar Test"));
                     } else {
                         player.sendMessage(ChatColor.RED + "Invalid Option!");
                     }

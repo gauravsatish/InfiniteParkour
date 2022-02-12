@@ -52,6 +52,12 @@ public class ParkourManager {
 
     public void startParkourProcess() {
 
+        if (InfiniteParkour.getPlayerJumpCounter().containsKey(player)) {
+            InfiniteParkour.getPlayerJumpCounter().remove(player);
+        }
+
+        InfiniteParkour.getPlayerJumpCounter().put(player, 0);
+
         new SyncPlayerTeleport(player, new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT + 1, slot.getMiddleZ()[1], -90f, 0f)).run();
 
         targetBlock = getNextBlock(new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT, slot.getMiddleZ()[1]));
@@ -63,6 +69,10 @@ public class ParkourManager {
             @Override
             public void run() {
                 if (player.getLocation().add(0, -1, 0).getBlock().getType().equals(TARGET_BLOCK_MATERIAL)) {
+
+                    InfiniteParkour.getPlayerJumpCounter().put(player, InfiniteParkour.getPlayerJumpCounter().get(player) + 1);
+                    JumpCounterSystem.update(player);
+
                     new SyncBlockChanger(targetBlock.getLocation(), NMS_PASSED_BLOCK, false).run();
                     new SyncBlockChanger(secondBlock.getLocation(), NMS_TARGET_BLOCK, false).run();
                     targetBlock = secondBlock;

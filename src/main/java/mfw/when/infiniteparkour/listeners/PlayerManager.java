@@ -1,5 +1,6 @@
 package mfw.when.infiniteparkour.listeners;
 
+import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.slotsystem.SlotManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -21,6 +22,8 @@ public class PlayerManager implements Listener {
         Location spawnLocation = e.getPlayer().getWorld().getSpawnLocation();
         spawnLocation.setYaw(-180f);
         spawnLocation.setPitch(0f);
+
+        InfiniteParkour.getPlayerJumpCounter().put(e.getPlayer(), 0);
     }
 
     @EventHandler

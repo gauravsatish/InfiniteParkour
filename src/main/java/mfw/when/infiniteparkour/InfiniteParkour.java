@@ -1,6 +1,7 @@
 package mfw.when.infiniteparkour;
 
 import mfw.when.infiniteparkour.commands.*;
+import mfw.when.infiniteparkour.infparkour.JumpCounterSystem;
 import mfw.when.infiniteparkour.infparkour.ParkourManager;
 import mfw.when.infiniteparkour.listeners.PlayerManager;
 import mfw.when.infiniteparkour.worldgen.VoidGenerator;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 public final class InfiniteParkour extends JavaPlugin {
 
     public static final double PARKOUR_HEIGHT = 100;
+    private static final HashMap<Player, Integer> playerJumpCounter = new HashMap<>();
     private static final HashMap<Player, ParkourManager> playerParkourManager = new HashMap<>();
     private static final HashMap<Player, BukkitTask> velocityTrackerProcesses = new HashMap<>();
     private static Plugin plugin;
@@ -32,25 +34,17 @@ public final class InfiniteParkour extends JavaPlugin {
         return velocityTrackerProcesses;
     }
 
+    public static HashMap<Player, Integer> getPlayerJumpCounter() {
+        return playerJumpCounter;
+    }
+
 
     @Override
     public void onEnable() {
 
         plugin = JavaPlugin.getPlugin(InfiniteParkour.class);
 
-        plugin.getLogger().info("test");
-
-        // Plugin startup logic
-
-//        MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
-//        core.deleteWorld("world");
-//        core.getMVWorldManager().addWorld("world", World.Environment.CUSTOM, UUID.randomUUID().toString(), WorldType.FLAT, false, )
-
         Bukkit.getPluginManager().registerEvents(new PlayerManager(), this);
-
-//        WorldCreator wc = new WorldCreator("world");
-//        wc.generator(new VoidGenerator());
-//        wc.createWorld();
 
         Bukkit.getWorld("world").setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         Bukkit.getWorld("world").setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
@@ -62,7 +56,8 @@ public final class InfiniteParkour extends JavaPlugin {
         getCommand("tpparkour").setExecutor(new TPParkourCommand());
         getCommand("setblocknms").setExecutor(new SetBlockNMSCommand());
 
-        this.getLogger().info("test2]2345345");
+        JumpCounterSystem.start();
+
     }
 
     @Override
