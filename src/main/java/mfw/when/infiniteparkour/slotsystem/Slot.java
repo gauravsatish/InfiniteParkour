@@ -10,7 +10,7 @@ public class Slot {
 
     public Slot(int slotNumber) {
         this.slotNumber = slotNumber;
-        this.slotStartZ = slotNumber * 16;
+        this.slotStartZ = slotNumber * 32;
         this.slotEndZ = ((slotNumber + 1) * 16) - 1;
         midBlockZ[0] = slotStartZ + 7;
         midBlockZ[1] = slotStartZ + 8;

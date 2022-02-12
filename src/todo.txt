@@ -4,12 +4,11 @@
  - difficulty levels
  - scoreboard which shows number of jumps and all that
  - make the generator more random somehow
- - make the wall generator seperating the different slots
- - set the player's gamemode to adventure ig
- - make the world generator which generates void or something
- - detect when the player fails a jump and reset
- - add a reset animation like blocks breaking with particles on a runnable with a tick delay or something
 
 
 DONE:
  - Make it generate two blocks in front of you for faster parkouring
+ - detect when the player fails a jump and reset
+ - make the world generator which generates void or something (just use void world plugin
+ - set the player's gamemode to adventure ig
+ - add a reset animation like blocks breaking with particles on a runnable with a tick delay or something

@@ -18,9 +18,9 @@ import java.util.Random;
 
 public class ParkourManager {
 
-    private final net.minecraft.world.level.block.Block NMS_TARGET_BLOCK = Blocks.eA;
-    private final net.minecraft.world.level.block.Block NMS_SECOND_BLOCK = Blocks.pi;
-    private final net.minecraft.world.level.block.Block NMS_PASSED_BLOCK = Blocks.bK;
+    private final net.minecraft.world.level.block.Block NMS_TARGET_BLOCK = Blocks.EMERALD_BLOCK;
+    private final net.minecraft.world.level.block.Block NMS_SECOND_BLOCK = Blocks.WAXED_COPPER_BLOCK;
+    private final net.minecraft.world.level.block.Block NMS_PASSED_BLOCK = Blocks.GOLD_BLOCK;
     private final Material TARGET_BLOCK_MATERIAL = Material.EMERALD_BLOCK;
     private final Material SECOND_BLOCK_MATERIAL = Material.WAXED_COPPER_BLOCK;
     private final Material PASSED_BLOCK_MATERIAL = Material.GOLD_BLOCK;
@@ -55,24 +55,19 @@ public class ParkourManager {
         new SyncPlayerTeleport(player, new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT + 1, slot.getMiddleZ()[1], -90f, 0f)).run();
 
         targetBlock = getNextBlock(new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT, slot.getMiddleZ()[1]));
-        new SyncBlockChanger(targetBlock.getLocation(), NMS_TARGET_BLOCK, TARGET_BLOCK_MATERIAL).run();
-//        new SyncBlockChanger(targetBlock).run();
+        new SyncBlockChanger(targetBlock.getLocation(), NMS_TARGET_BLOCK, false).run();
         secondBlock = getNextBlock(targetBlock.getLocation());
-        new SyncBlockChanger(secondBlock.getLocation(), NMS_SECOND_BLOCK, SECOND_BLOCK_MATERIAL).run();
-//        new SyncBlockChanger(secondBlock).run();
+        new SyncBlockChanger(secondBlock.getLocation(), NMS_SECOND_BLOCK, false).run();
 
         process = new BukkitRunnable() {
             @Override
             public void run() {
                 if (player.getLocation().add(0, -1, 0).getBlock().getType().equals(TARGET_BLOCK_MATERIAL)) {
-                    new SyncBlockChanger(targetBlock.getLocation(), NMS_PASSED_BLOCK, PASSED_BLOCK_MATERIAL).run();
-//                    new SyncBlockChanger(targetBlock).run();
-                    new SyncBlockChanger(secondBlock.getLocation(), NMS_TARGET_BLOCK, TARGET_BLOCK_MATERIAL).run();
-//                    new SyncBlockChanger(secondBlock).run();
+                    new SyncBlockChanger(targetBlock.getLocation(), NMS_PASSED_BLOCK, false).run();
+                    new SyncBlockChanger(secondBlock.getLocation(), NMS_TARGET_BLOCK, false).run();
                     targetBlock = secondBlock;
                     secondBlock = getNextBlock(secondBlock.getLocation());
-                    new SyncBlockChanger(secondBlock.getLocation(), NMS_SECOND_BLOCK, SECOND_BLOCK_MATERIAL).run();
-//                    new SyncBlockChanger(secondBlock).run();
+                    new SyncBlockChanger(secondBlock.getLocation(), NMS_SECOND_BLOCK, false).run();
                 }
 
                 if (player.getVelocity().getY() < -2) {
@@ -89,8 +84,6 @@ public class ParkourManager {
             public void run() {
                 slot.getLog().resetBlocks();
                 process.cancel();
-                InfiniteParkour.getPlugin().getLogger().info("cancelled process");
-                InfiniteParkour.getPlugin().getLogger().info("starting process after resetting");
                 targetBlock = null;
                 secondBlock = null;
                 startParkourProcess();
@@ -105,8 +98,8 @@ public class ParkourManager {
 
         Block block = loc.add(forwardLength, height, offset).getBlock();
         slot.getLog().addBlock(block);
-
         return block;
+
     }
 
     private int generateSidewaysOffset(int height) {

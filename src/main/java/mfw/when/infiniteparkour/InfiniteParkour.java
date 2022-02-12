@@ -1,14 +1,12 @@
 package mfw.when.infiniteparkour;
 
-import mfw.when.infiniteparkour.commands.InfiniteParkourCommand;
-import mfw.when.infiniteparkour.commands.ResetCommand;
-import mfw.when.infiniteparkour.commands.TPParkourCommand;
-import mfw.when.infiniteparkour.commands.TestCommand;
+import mfw.when.infiniteparkour.commands.*;
 import mfw.when.infiniteparkour.infparkour.ParkourManager;
 import mfw.when.infiniteparkour.listeners.PlayerManager;
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
+import mfw.when.infiniteparkour.worldgen.VoidGenerator;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -40,11 +38,19 @@ public final class InfiniteParkour extends JavaPlugin {
 
         plugin = JavaPlugin.getPlugin(InfiniteParkour.class);
 
+        plugin.getLogger().info("test");
+
         // Plugin startup logic
 
 //        MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
+//        core.deleteWorld("world");
+//        core.getMVWorldManager().addWorld("world", World.Environment.CUSTOM, UUID.randomUUID().toString(), WorldType.FLAT, false, )
 
         Bukkit.getPluginManager().registerEvents(new PlayerManager(), this);
+
+//        WorldCreator wc = new WorldCreator("world");
+//        wc.generator(new VoidGenerator());
+//        wc.createWorld();
 
         Bukkit.getWorld("world").setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         Bukkit.getWorld("world").setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
@@ -54,10 +60,18 @@ public final class InfiniteParkour extends JavaPlugin {
         getCommand("test").setExecutor(new TestCommand());
         getCommand("reset").setExecutor(new ResetCommand());
         getCommand("tpparkour").setExecutor(new TPParkourCommand());
+        getCommand("setblocknms").setExecutor(new SetBlockNMSCommand());
+
+        this.getLogger().info("test2]2345345");
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    @Override
+    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
+        return new VoidGenerator();
     }
 }

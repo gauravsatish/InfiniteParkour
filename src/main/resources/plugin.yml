@@ -3,6 +3,8 @@ version: '${project.version}'
 main: mfw.when.infiniteparkour.InfiniteParkour
 api-version: 1.18
 authors: [ wekj ]
+softdepend:
+  - VoidGen
 description: Infinite Parkour Yay
 commands:
   infiniteparkour:
@@ -12,3 +14,4 @@ commands:
   test:
   reset:
   tpparkour:
+  setblocknms:
