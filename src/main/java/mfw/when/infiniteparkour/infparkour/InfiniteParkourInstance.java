@@ -22,6 +22,7 @@ public class InfiniteParkourInstance {
         this.player.setGameMode(GameMode.ADVENTURE);
 
         this.parkourManager = new ParkourManager(this.player, slot);
+        this.slot.attachParkourMGR(parkourManager);
         new SyncPlayerTeleport(player, new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT + 1, slot.getMiddleZ()[1], -90f, 0f)).run();
         parkourManager.startParkourProcess();
     }

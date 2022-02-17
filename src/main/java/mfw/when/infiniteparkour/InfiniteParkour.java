@@ -4,6 +4,8 @@ import mfw.when.infiniteparkour.commands.*;
 import mfw.when.infiniteparkour.infparkour.JumpCounterSystem;
 import mfw.when.infiniteparkour.infparkour.ParkourManager;
 import mfw.when.infiniteparkour.listeners.PlayerManager;
+import mfw.when.infiniteparkour.slotsystem.Slot;
+import mfw.when.infiniteparkour.slotsystem.SlotManager;
 import mfw.when.infiniteparkour.worldgen.VoidGenerator;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -63,6 +65,9 @@ public final class InfiniteParkour extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        for (Slot slot : SlotManager.getParkourMGRs().keySet()) {
+            SlotManager.getParkourMGRs().get(slot).stopParkourProcess(true);
+        }
     }
 
     @Override

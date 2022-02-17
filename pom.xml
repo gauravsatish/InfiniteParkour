@@ -6,7 +6,7 @@
 
     <groupId>mfw.when</groupId>
     <artifactId>InfiniteParkour</artifactId>
-    <version>BETA-1.2</version>
+    <version>BETA-1.2.1</version>
     <packaging>jar</packaging>
 
     <name>Infinite Parkour</name>

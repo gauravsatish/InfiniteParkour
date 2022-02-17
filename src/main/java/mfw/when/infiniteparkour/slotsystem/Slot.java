@@ -1,5 +1,7 @@
 package mfw.when.infiniteparkour.slotsystem;
 
+import mfw.when.infiniteparkour.infparkour.ParkourManager;
+
 public class Slot {
 
     private final int slotNumber;
@@ -25,6 +27,10 @@ public class Slot {
 
     public SlotLog getLog() {
         return log;
+    }
+
+    public void attachParkourMGR(ParkourManager parkourManager) {
+        SlotManager.getParkourMGRs().put(this, parkourManager);
     }
 
     public int getSlotNumber() {

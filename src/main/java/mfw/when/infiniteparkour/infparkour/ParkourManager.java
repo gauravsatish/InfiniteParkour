@@ -87,17 +87,18 @@ public class ParkourManager {
     }
 
     private void resetPlayer() {
-        Bukkit.getScheduler().runTask(InfiniteParkour.getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                slot.getLog().resetBlocks();
-                process.cancel();
-                targetBlock = null;
-                secondBlock = null;
-                new SyncPlayerTeleport(player, new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT + 1, slot.getMiddleZ()[1], -90f, 0f)).run();
-                Bukkit.getScheduler().runTaskLater(InfiniteParkour.getPlugin(), () -> startParkourProcess(), 20);
-            }
+        Bukkit.getScheduler().runTask(InfiniteParkour.getPlugin(), () -> {
+            stopParkourProcess(false);
+            new SyncPlayerTeleport(player, new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT + 1, slot.getMiddleZ()[1], -90f, 0f)).run();
+            Bukkit.getScheduler().runTaskLater(InfiniteParkour.getPlugin(), () -> startParkourProcess(), 20);
         });
+    }
+
+    public void stopParkourProcess(boolean onDisable) {
+        slot.getLog().resetBlocks(onDisable);
+        process.cancel();
+        targetBlock = null;
+        secondBlock = null;
     }
 
     private Block getNextBlock(Location loc) {

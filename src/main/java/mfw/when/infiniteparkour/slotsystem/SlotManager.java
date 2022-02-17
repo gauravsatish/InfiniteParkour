@@ -9,11 +9,12 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SlotManager {
 
     private static final ArrayList<Integer> slotsInUse = new ArrayList<>();
-
+    private static final HashMap<Slot, ParkourManager> parkourMGRs = new HashMap<>();
 
     private static final World world = Bukkit.getWorld("world");
 
@@ -33,7 +34,7 @@ public class SlotManager {
             ParkourManager pm = InfiniteParkour.getPlayerParkourManager().get(player);
 
             InfiniteParkour.getPlugin().getLogger().info("Cleared Blocks");
-            pm.getSlot().getLog().resetBlocks();
+            pm.getSlot().getLog().resetBlocks(false);
             pm.getProcess().cancel();
             InfiniteParkour.getPlugin().getLogger().info("cancelled player process");
             SlotManager.getSlotsInUse().remove(Integer.valueOf(pm.getSlot().getSlotNumber()));
@@ -43,7 +44,6 @@ public class SlotManager {
             InfiniteParkour.getPlugin().getLogger().info("Passed already existing in hashmap check");
         }
     }
-
     public static void setupSlot(Slot slot) {
         setupFloorRow(world.getBlockAt(0, (int) InfiniteParkour.PARKOUR_HEIGHT, (int) slot.getSlotStartZ()));
         setupFloorRow(world.getBlockAt(-1, (int) InfiniteParkour.PARKOUR_HEIGHT, (int) slot.getSlotStartZ()));
@@ -70,5 +70,9 @@ public class SlotManager {
 
     public static ArrayList<Integer> getSlotsInUse() {
         return slotsInUse;
+    }
+
+    public static HashMap<Slot, ParkourManager> getParkourMGRs() {
+        return parkourMGRs;
     }
 }
