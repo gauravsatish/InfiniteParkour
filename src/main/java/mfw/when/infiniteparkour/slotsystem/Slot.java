@@ -1,6 +1,6 @@
 package mfw.when.infiniteparkour.slotsystem;
 
-import mfw.when.infiniteparkour.infparkour.ParkourManager;
+import mfw.when.infiniteparkour.parkour.ParkourManager;
 
 public class Slot {
 

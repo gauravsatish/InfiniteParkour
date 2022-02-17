@@ -1,15 +1,13 @@
 package mfw.when.infiniteparkour;
 
 import mfw.when.infiniteparkour.commands.*;
-import mfw.when.infiniteparkour.infparkour.JumpCounterSystem;
-import mfw.when.infiniteparkour.infparkour.ParkourManager;
+import mfw.when.infiniteparkour.parkour.JumpCounterSystem;
+import mfw.when.infiniteparkour.parkour.ParkourManager;
 import mfw.when.infiniteparkour.listeners.PlayerManager;
 import mfw.when.infiniteparkour.slotsystem.Slot;
 import mfw.when.infiniteparkour.slotsystem.SlotManager;
-import mfw.when.infiniteparkour.worldgen.VoidGenerator;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -68,10 +66,5 @@ public final class InfiniteParkour extends JavaPlugin {
         for (Slot slot : SlotManager.getParkourMGRs().keySet()) {
             SlotManager.getParkourMGRs().get(slot).stopParkourProcess(true);
         }
-    }
-
-    @Override
-    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
-        return new VoidGenerator();
     }
 }

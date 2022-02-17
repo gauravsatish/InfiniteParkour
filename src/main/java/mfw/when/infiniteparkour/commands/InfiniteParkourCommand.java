@@ -1,6 +1,6 @@
 package mfw.when.infiniteparkour.commands;
 
-import mfw.when.infiniteparkour.infparkour.InfiniteParkourInstance;
+import mfw.when.infiniteparkour.parkour.InfiniteParkourInstance;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

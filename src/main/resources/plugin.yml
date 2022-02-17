@@ -10,7 +10,7 @@ commands:
   infiniteparkour:
     description: Starts the parkour hopefully
     aliases:
-      - infparkour
+      - parkour
   test:
   reset:
   tpparkour:

@@ -1,7 +1,7 @@
 package mfw.when.infiniteparkour.slotsystem;
 
 import mfw.when.infiniteparkour.InfiniteParkour;
-import mfw.when.infiniteparkour.infparkour.ParkourManager;
+import mfw.when.infiniteparkour.parkour.ParkourManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;

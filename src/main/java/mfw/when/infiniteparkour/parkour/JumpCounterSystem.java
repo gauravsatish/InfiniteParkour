@@ -1,4 +1,4 @@
-package mfw.when.infiniteparkour.infparkour;
+package mfw.when.infiniteparkour.parkour;
 
 import mfw.when.infiniteparkour.InfiniteParkour;
 import net.md_5.bungee.api.ChatMessageType;
