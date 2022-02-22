@@ -15,3 +15,6 @@ commands:
   reset:
   tpparkour:
   setblocknms:
+  leaveparkour:
+    description: Leaves your current parkour session. Only for operators
+    aliases: lvpk

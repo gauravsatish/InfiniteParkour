@@ -1,5 +1,6 @@
 package mfw.when.infiniteparkour.slotsystem;
 
+import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.parkour.ParkourManager;
 
 public class Slot {
@@ -13,7 +14,7 @@ public class Slot {
     public Slot(int slotNumber) {
         this.slotNumber = slotNumber;
         this.slotStartZ = slotNumber * 32;
-        this.slotEndZ = ((slotNumber + 1) * 16) - 1;
+        this.slotEndZ = slotStartZ + 15;
         midBlockZ[0] = slotStartZ + 7;
         midBlockZ[1] = slotStartZ + 8;
     }
@@ -37,11 +38,11 @@ public class Slot {
         return slotNumber;
     }
 
-    public double getSlotStartZ() {
+    public double getMinZ() {
         return slotStartZ;
     }
 
-    public double getSlotEndZ() {
+    public double getMaxZ() {
         return slotEndZ;
     }
 

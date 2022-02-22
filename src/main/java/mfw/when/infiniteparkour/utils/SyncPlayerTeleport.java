@@ -16,6 +16,7 @@ public class SyncPlayerTeleport {
     }
 
     public void run() {
+        InfiniteParkour.getPlugin().getLogger().info("teleported yaya");
         Bukkit.getScheduler().runTask(InfiniteParkour.getPlugin(), () -> player.teleport(location));
     }
 }
