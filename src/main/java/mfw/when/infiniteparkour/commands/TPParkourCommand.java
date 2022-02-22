@@ -1,7 +1,6 @@
 package mfw.when.infiniteparkour.commands;
 
 import mfw.when.infiniteparkour.InfiniteParkour;
-import mfw.when.infiniteparkour.slotsystem.SlotManager;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,7 +15,7 @@ public class TPParkourCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (player.isOp()) {
-                player.teleport(new Location(player.getWorld(), 0, InfiniteParkour.PARKOUR_HEIGHT + 1, SlotManager.getSlot(1).getMiddleZ()[0] + 0.5));
+                player.teleport(new Location(player.getWorld(), 0, InfiniteParkour.PARKOUR_HEIGHT + 1, 40 + 0.5, -90f, 0f));
             }
         }
 

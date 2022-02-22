@@ -13,23 +13,29 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import xyz.xenondevs.particle.ParticleBuilder;
+import xyz.xenondevs.particle.ParticleEffect;
 
+import java.awt.*;
 import java.util.Random;
 
 public class ParkourManager {
 
-    private final net.minecraft.world.level.block.Block NMS_TARGET_BLOCK = Blocks.EMERALD_BLOCK;
-    private final net.minecraft.world.level.block.Block NMS_SECOND_BLOCK = Blocks.WAXED_COPPER_BLOCK;
-    private final net.minecraft.world.level.block.Block NMS_PASSED_BLOCK = Blocks.GOLD_BLOCK;
-    private final Material TARGET_BLOCK_MATERIAL = Material.EMERALD_BLOCK;
-    private final Material SECOND_BLOCK_MATERIAL = Material.WAXED_COPPER_BLOCK;
-    private final Material PASSED_BLOCK_MATERIAL = Material.GOLD_BLOCK;
+    private final net.minecraft.world.level.block.Block NMS_TARGET_BLOCK = Blocks.INFESTED_CRACKED_STONE_BRICKS;
+    private final net.minecraft.world.level.block.Block NMS_SECOND_BLOCK = Blocks.MOSSY_COBBLESTONE;
+    private final net.minecraft.world.level.block.Block NMS_THIRD_BLOCK = Blocks.FLOWERING_AZALEA_LEAVES;
+    private final net.minecraft.world.level.block.Block NMS_PASSED_BLOCK = Blocks.MOSS_BLOCK;
+    private final Material TARGET_BLOCK_MATERIAL = Material.INFESTED_CRACKED_STONE_BRICKS;
+    private final Material SECOND_BLOCK_MATERIAL = Material.MOSSY_COBBLESTONE;
+    private final Material PASSED_BLOCK_MATERIAL = Material.MOSS_BLOCK;
+    private final Material THIRD_BLOCK_MATERIAL = Material.FLOWERING_AZALEA_LEAVES;
 
     private final Random random = new Random();
     private final Player player;
     private final Slot slot;
     private Block targetBlock;
     private Block secondBlock;
+    private Block thirdBlock;
     private BukkitTask process;
 
     public ParkourManager(Player player, Slot slot) {
@@ -62,6 +68,9 @@ public class ParkourManager {
         new SyncBlockChanger(targetBlock.getLocation(), NMS_TARGET_BLOCK, false).run();
         secondBlock = getNextBlock(targetBlock.getLocation());
         new SyncBlockChanger(secondBlock.getLocation(), NMS_SECOND_BLOCK, false).run();
+        thirdBlock = getNextBlock(secondBlock.getLocation());
+        new SyncBlockChanger(thirdBlock.getLocation(), NMS_THIRD_BLOCK, false).run();
+
 
         process = new BukkitRunnable() {
             @Override
@@ -71,11 +80,14 @@ public class ParkourManager {
                     InfiniteParkour.getPlayerJumpCounter().put(player, InfiniteParkour.getPlayerJumpCounter().get(player) + 1);
                     JumpCounterSystem.update(player);
 
+                    new SyncBlockChanger(thirdBlock.getLocation(), NMS_SECOND_BLOCK, false).run();
                     new SyncBlockChanger(targetBlock.getLocation(), NMS_PASSED_BLOCK, false).run();
                     new SyncBlockChanger(secondBlock.getLocation(), NMS_TARGET_BLOCK, false).run();
                     targetBlock = secondBlock;
-                    secondBlock = getNextBlock(secondBlock.getLocation());
-                    new SyncBlockChanger(secondBlock.getLocation(), NMS_SECOND_BLOCK, false).run();
+                    secondBlock = thirdBlock;
+                    thirdBlock = getNextBlock(thirdBlock.getLocation());
+                    new SyncBlockChanger(thirdBlock.getLocation(), NMS_THIRD_BLOCK, false).run();
+                    playBlockGenAnimation(thirdBlock);
                 }
 
                 if (player.getVelocity().getY() < -2) {
@@ -104,6 +116,23 @@ public class ParkourManager {
         process.cancel();
         targetBlock = null;
         secondBlock = null;
+    }
+
+    private void playBlockGenAnimation(Block block) {
+        new BukkitRunnable() {
+            int counter = 0;
+            @Override
+            public void run() {
+                new ParticleBuilder(ParticleEffect.FALLING_SPORE_BLOSSOM, block.getLocation().add(0.5, 0.5, 0.5).add((float) (random.nextDouble(2.0) - 1) / 1.25, (float) (random.nextDouble(2.0) - 1) / 1.25, (float) (random.nextDouble(2.0) - 1) / 1.25))
+                        .setSpeed(0.1f)
+                        .setColor(new Color(135, 206, 250))
+                        .display(player);
+                counter++;
+                if (counter == 10) {
+                    cancel();
+                }
+            }
+        }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 0, 1);
     }
 
     private Block getNextBlock(Location loc) {
