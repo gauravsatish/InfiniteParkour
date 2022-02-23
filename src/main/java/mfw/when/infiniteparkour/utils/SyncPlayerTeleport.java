@@ -5,18 +5,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-public class SyncPlayerTeleport {
-
-    private final Player player;
-    private final Location location;
-
-    public SyncPlayerTeleport(Player player, Location location) {
-        this.player = player;
-        this.location = location;
-    }
+public record SyncPlayerTeleport(Player player, Location location) {
 
     public void run() {
-        InfiniteParkour.getPlugin().getLogger().info("teleported yaya");
         Bukkit.getScheduler().runTask(InfiniteParkour.getPlugin(), () -> player.teleport(location));
     }
 }

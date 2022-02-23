@@ -1,8 +1,6 @@
  - add more parkour stuff, like ladder jumps and maybe neos
  - difficulty levels
  - make the generator more random somehow
- - make the Slot#getLog() get logs from a hashmap instead of creating a new log
- - start the jump counter system after the parkouring starts
 
 
 DONE:
@@ -14,3 +12,5 @@ DONE:
  - Add reverting blocks and other stuff on shutting down of server
  - scoreboard which shows number of jumps and all that - changed to using action bar
  - check whether the next block is within the slot boundaries
+ - start the jump counter system after the parkouring starts
+ - make the Slot#getLog() get logs from a hashmap instead of creating a new log

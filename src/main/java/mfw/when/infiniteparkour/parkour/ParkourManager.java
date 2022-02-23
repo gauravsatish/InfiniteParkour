@@ -44,8 +44,7 @@ public class ParkourManager {
 
         SlotManager.resetPlayer(player);
 
-        InfiniteParkour.getPlayerParkourManager().put(player, this);
-        InfiniteParkour.getPlugin().getLogger().info("added to hashmap");
+        InfiniteParkour.getPlayerParkourManager().put(player, this);;
     }
 
     public Slot getSlot() {
@@ -91,7 +90,6 @@ public class ParkourManager {
                 }
 
                 if (player.getVelocity().getY() < -2) {
-                    InfiniteParkour.getPlugin().getLogger().info("called reset");
                     new SyncPlayerTeleport(player, new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT + 1, slot.getMiddleZ()[1], -90f, 0f)).run();
                     resetPlayer();
                 }
@@ -149,7 +147,6 @@ public class ParkourManager {
             } else {
                 block = block.getLocation().add(0, 0, -2 * displaceOffset).getBlock();
             }
-            InfiniteParkour.getPlugin().getLogger().info("out of bounds block gen");
         } else if (block.getLocation().getBlockZ() <= slot.getMinZ()) {
             int displaceOffset = (int) (slot.getMinZ() - block.getLocation().getBlockZ());
             if (displaceOffset == 0) {
@@ -157,7 +154,6 @@ public class ParkourManager {
             } else {
                 block = block.getLocation().add(0, 0, 2 * displaceOffset).getBlock();
             }
-            InfiniteParkour.getPlugin().getLogger().info("out of bounds block gen");
         }
 
         slot.getLog().addBlock(block);

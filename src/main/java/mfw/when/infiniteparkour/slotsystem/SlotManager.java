@@ -36,16 +36,12 @@ public class SlotManager {
 
             ParkourManager pm = InfiniteParkour.getPlayerParkourManager().get(player);
 
-            InfiniteParkour.getPlugin().getLogger().info("Cleared Blocks");
             pm.getSlot().getLog().resetBlocks(false);
             pm.getProcess().cancel();
-            InfiniteParkour.getPlugin().getLogger().info("cancelled player process");
             SlotManager.getSlotHashMap().remove(pm.getSlot().getSlotNumber());
 
             InfiniteParkour.getPlayerParkourManager().remove(player);
             JumpCounterSystem.removePlayer(player);
-        } else {
-            InfiniteParkour.getPlugin().getLogger().info("Passed already existing in hashmap check");
         }
     }
 

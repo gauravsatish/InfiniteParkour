@@ -54,7 +54,6 @@ public final class InfiniteParkour extends JavaPlugin {
         getCommand("test").setExecutor(new TestCommand());
         getCommand("reset").setExecutor(new ResetCommand());
         getCommand("tpparkour").setExecutor(new TPParkourCommand());
-        getCommand("setblocknms").setExecutor(new SetBlockNMSCommand());
         getCommand("leaveparkour").setExecutor(new LeaveParkourCommand());
 
         JumpCounterSystem.start();

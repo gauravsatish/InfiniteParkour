@@ -28,8 +28,6 @@ public class ResetCommand implements CommandExecutor {
                 } else {
                     player.sendMessage(ChatColor.RED + "Invalid Option");
                 }
-            } else {
-                InfiniteParkour.getPlugin().getLogger().info("Slots reset");
             }
         }
 
