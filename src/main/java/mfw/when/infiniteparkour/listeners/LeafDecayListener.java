@@ -8,7 +8,7 @@ public class LeafDecayListener implements Listener {
 
     @EventHandler
     public void onLeafDecay(LeavesDecayEvent e) {
-
         e.setCancelled(true);
     }
 }
+A
