@@ -94,7 +94,6 @@ public class ParkourManager {
                             secondBlock = thirdBlock;
                             thirdBlock = fourthBlock;
                             fourthBlock = getNextBlock(fourthBlock.getLocation());
-                            fourthBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
                             new SyncBlockChanger(fourthBlock.getLocation(), blocks.get(0), false).run();
                             playBlockGenAnimation(fourthBlock);
                         }
@@ -151,7 +150,7 @@ public class ParkourManager {
     private Block getNextBlock(Location loc) {
         int height = generateHeight();
         int forwardLength = generateForwardLength();
-        int offset = generateSidewaysOffset(height);
+        int offset = generateSidewaysOffset();
 
         Block block = loc.add(forwardLength, height, offset).getBlock();
 
@@ -173,22 +172,18 @@ public class ParkourManager {
 
         block.setMetadata("counter", new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
 
+        if (block.getType().equals(Material.FLOWERING_AZALEA_LEAVES)) {
+            block.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
+        }
+
         slot.getLog().addBlock(block);
 
         counter++;
         return block;
     }
 
-    private int generateSidewaysOffset(int height) {
+    private int generateSidewaysOffset() {
         int offset = random.nextInt(7) - 3;
-
-//        if (height == 1 && (offset == 3 || offset == -3)) {
-//            if (offset == 3) {
-//                offset = 2;
-//            } else {
-//                offset = -2;
-//            }
-//        }
         return offset;
     }
 
