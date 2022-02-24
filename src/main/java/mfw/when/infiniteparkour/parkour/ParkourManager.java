@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import xyz.xenondevs.particle.ParticleBuilder;
@@ -44,7 +45,7 @@ public class ParkourManager {
 
         SlotManager.resetPlayer(player);
 
-        InfiniteParkour.getPlayerParkourManager().put(player, this);;
+        InfiniteParkour.getPlayerParkourManager().put(player, this);
     }
 
     public Slot getSlot() {
@@ -69,6 +70,7 @@ public class ParkourManager {
         new SyncBlockChanger(secondBlock.getLocation(), NMS_SECOND_BLOCK, false).run();
         thirdBlock = getNextBlock(secondBlock.getLocation());
         new SyncBlockChanger(thirdBlock.getLocation(), NMS_THIRD_BLOCK, false).run();
+        thirdBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
 
 
         process = new BukkitRunnable() {
@@ -85,6 +87,7 @@ public class ParkourManager {
                     targetBlock = secondBlock;
                     secondBlock = thirdBlock;
                     thirdBlock = getNextBlock(thirdBlock.getLocation());
+                    thirdBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
                     new SyncBlockChanger(thirdBlock.getLocation(), NMS_THIRD_BLOCK, false).run();
                     playBlockGenAnimation(thirdBlock);
                 }

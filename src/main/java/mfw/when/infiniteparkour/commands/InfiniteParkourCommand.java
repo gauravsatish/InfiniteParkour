@@ -14,7 +14,11 @@ public class InfiniteParkourCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
-            new InfiniteParkourInstance(player);
+            if (player.isOp()) {
+                new InfiniteParkourInstance(player);
+            } else {
+                player.sendMessage("Insufficient permissions");
+            }
         }
 
         return false;

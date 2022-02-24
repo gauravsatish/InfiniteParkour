@@ -22,7 +22,6 @@ public class LeaveParkourCommand implements CommandExecutor {
                 SlotManager.resetPlayer(player);
             }
         }
-
         return false;
     }
 }

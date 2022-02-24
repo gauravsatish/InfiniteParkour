@@ -1,6 +1,7 @@
 package mfw.when.infiniteparkour;
 
 import mfw.when.infiniteparkour.commands.*;
+import mfw.when.infiniteparkour.listeners.LeafDecayListener;
 import mfw.when.infiniteparkour.parkour.JumpCounterSystem;
 import mfw.when.infiniteparkour.parkour.ParkourManager;
 import mfw.when.infiniteparkour.listeners.PlayerManager;
@@ -45,6 +46,8 @@ public final class InfiniteParkour extends JavaPlugin {
         plugin = JavaPlugin.getPlugin(InfiniteParkour.class);
 
         Bukkit.getPluginManager().registerEvents(new PlayerManager(), this);
+        Bukkit.getPluginManager().registerEvents(new LeafDecayListener(), this);
+        InfiniteParkour.getPlugin().getLogger().info("registered event");
 
         Bukkit.getWorld("world").setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         Bukkit.getWorld("world").setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
