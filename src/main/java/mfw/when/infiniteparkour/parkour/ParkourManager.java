@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Blocks;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -18,7 +19,6 @@ import org.bukkit.scheduler.BukkitTask;
 import xyz.xenondevs.particle.ParticleBuilder;
 import xyz.xenondevs.particle.ParticleEffect;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -85,6 +85,7 @@ public class ParkourManager {
             public void run() {
                 for (MetadataValue value : player.getLocation().add(0, -1, 0).getBlock().getMetadata("counter")) {
                     if (value.asInt() > InfiniteParkour.getPlayerJumpCounter().get(player)) {
+                        player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.1f, (float) Math.random());
                         for (int i = 0; i <= (value.asInt() - InfiniteParkour.getPlayerJumpCounter().get(player)); i++) {
                             Collections.shuffle(blocks);
                             InfiniteParkour.getPlayerJumpCounter().put(player, InfiniteParkour.getPlayerJumpCounter().get(player) + 1);
@@ -137,7 +138,6 @@ public class ParkourManager {
             public void run() {
                 new ParticleBuilder(ParticleEffect.CLOUD, block.getLocation().add(0.5, 0.5, 0.5).add((float) (random.nextDouble(2.0) - 1) / 1.25, (float) (random.nextDouble(2.0) - 1) / 1.25, (float) (random.nextDouble(2.0) - 1) / 1.25))
                         .setSpeed(0.1f)
-                        .setColor(new Color(135, 206, 250))
                         .display(player);
                 counter++;
                 if (counter == 10) {
@@ -171,10 +171,6 @@ public class ParkourManager {
         }
 
         block.setMetadata("counter", new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
-
-        if (block.getType().equals(Material.FLOWERING_AZALEA_LEAVES)) {
-            block.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
-        }
 
         slot.getLog().addBlock(block);
 

@@ -1,7 +1,6 @@
  - add more parkour stuff, like ladder jumps and maybe neos
  - difficulty levels
  - make the generator more random somehow
- - make the block generate 4 block ahead,
 
 
 DONE:
