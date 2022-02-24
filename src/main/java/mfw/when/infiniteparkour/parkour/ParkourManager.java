@@ -12,26 +12,19 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import xyz.xenondevs.particle.ParticleBuilder;
 import xyz.xenondevs.particle.ParticleEffect;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class ParkourManager {
-
-    private final net.minecraft.world.level.block.Block NMS_PASSED_BLOCK = Blocks.MOSS_BLOCK;
-    private final net.minecraft.world.level.block.Block NMS_TARGET_BLOCK = Blocks.MOSSY_STONE_BRICKS;
-    private final net.minecraft.world.level.block.Block NMS_SECOND_BLOCK = Blocks.INFESTED_CRACKED_STONE_BRICKS;
-    private final net.minecraft.world.level.block.Block NMS_THIRD_BLOCK = Blocks.MOSSY_COBBLESTONE;
-    private final net.minecraft.world.level.block.Block NMS_FOURTH_BLOCK = Blocks.FLOWERING_AZALEA_LEAVES;
-    private final Material PASSED_BLOCK_MATERIAL = Material.MOSS_BLOCK;
-    private final Material TARGET_BLOCK_MATERIAL = Material.MOSSY_STONE_BRICKS;
-    private final Material SECOND_BLOCK_MATERIAL = Material.INFESTED_CRACKED_STONE_BRICKS;
-    private final Material THIRD_BLOCK_MATERIAL = Material.MOSSY_COBBLESTONE;
-    private final Material FOURTH_BLOCK_MATERIAL = Material.FLOWERING_AZALEA_LEAVES;
+    private final ArrayList<net.minecraft.world.level.block.Block> blocks = new ArrayList<>();
 
     private final Random random = new Random();
     private final Player player;
@@ -41,8 +34,16 @@ public class ParkourManager {
     private Block thirdBlock;
     private Block fourthBlock;
     private BukkitTask process;
+    private int counter = 1;
 
     public ParkourManager(Player player, Slot slot) {
+
+        blocks.add(Blocks.MOSS_BLOCK);
+        blocks.add(Blocks.MOSSY_STONE_BRICKS);
+        blocks.add(Blocks.INFESTED_CRACKED_STONE_BRICKS);
+        blocks.add(Blocks.MOSSY_COBBLESTONE);
+        blocks.add(Blocks.FLOWERING_AZALEA_LEAVES);
+
         this.player = player;
         this.slot = slot;
 
@@ -68,13 +69,13 @@ public class ParkourManager {
         InfiniteParkour.getPlayerJumpCounter().put(player, 0);
 
         targetBlock = getNextBlock(new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT, slot.getMiddleZ()[1]));
-        new SyncBlockChanger(targetBlock.getLocation(), NMS_TARGET_BLOCK, false).run();
+        new SyncBlockChanger(targetBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
         secondBlock = getNextBlock(targetBlock.getLocation());
-        new SyncBlockChanger(secondBlock.getLocation(), NMS_SECOND_BLOCK, false).run();
+        new SyncBlockChanger(secondBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
         thirdBlock = getNextBlock(secondBlock.getLocation());
-        new SyncBlockChanger(thirdBlock.getLocation(), NMS_THIRD_BLOCK, false).run();
+        new SyncBlockChanger(thirdBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
         fourthBlock = getNextBlock(thirdBlock.getLocation());
-        new SyncBlockChanger(fourthBlock.getLocation(), NMS_FOURTH_BLOCK, false).run();
+        new SyncBlockChanger(fourthBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
 
         fourthBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
 
@@ -82,22 +83,22 @@ public class ParkourManager {
         process = new BukkitRunnable() {
             @Override
             public void run() {
-                if (player.getLocation().add(0, -1, 0).getBlock().getType().equals(TARGET_BLOCK_MATERIAL)) {
+                for (MetadataValue value : player.getLocation().add(0, -1, 0).getBlock().getMetadata("counter")) {
+                    if (value.asInt() > InfiniteParkour.getPlayerJumpCounter().get(player)) {
+                        for (int i = 0; i <= (value.asInt() - InfiniteParkour.getPlayerJumpCounter().get(player)); i++) {
+                            Collections.shuffle(blocks);
+                            InfiniteParkour.getPlayerJumpCounter().put(player, InfiniteParkour.getPlayerJumpCounter().get(player) + 1);
+                            JumpCounterSystem.update(player);
 
-                    InfiniteParkour.getPlayerJumpCounter().put(player, InfiniteParkour.getPlayerJumpCounter().get(player) + 1);
-                    JumpCounterSystem.update(player);
-
-                    new SyncBlockChanger(fourthBlock.getLocation(), NMS_THIRD_BLOCK, false).run();
-                    new SyncBlockChanger(thirdBlock.getLocation(), NMS_SECOND_BLOCK, false).run();
-                    new SyncBlockChanger(targetBlock.getLocation(), NMS_PASSED_BLOCK, false).run();
-                    new SyncBlockChanger(secondBlock.getLocation(), NMS_TARGET_BLOCK, false).run();
-                    targetBlock = secondBlock;
-                    secondBlock = thirdBlock;
-                    thirdBlock = fourthBlock;
-                    fourthBlock = getNextBlock(fourthBlock.getLocation());
-                    fourthBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
-                    new SyncBlockChanger(fourthBlock.getLocation(), NMS_FOURTH_BLOCK, false).run();
-                    playBlockGenAnimation(fourthBlock);
+                            targetBlock = secondBlock;
+                            secondBlock = thirdBlock;
+                            thirdBlock = fourthBlock;
+                            fourthBlock = getNextBlock(fourthBlock.getLocation());
+                            fourthBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
+                            new SyncBlockChanger(fourthBlock.getLocation(), blocks.get(0), false).run();
+                            playBlockGenAnimation(fourthBlock);
+                        }
+                    }
                 }
 
                 if (player.getVelocity().getY() < -2) {
@@ -125,6 +126,9 @@ public class ParkourManager {
         process.cancel();
         targetBlock = null;
         secondBlock = null;
+        thirdBlock = null;
+        fourthBlock = null;
+        counter = 1;
     }
 
     private void playBlockGenAnimation(Block block) {
@@ -167,7 +171,11 @@ public class ParkourManager {
             }
         }
 
+        block.setMetadata("counter", new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
+
         slot.getLog().addBlock(block);
+
+        counter++;
         return block;
     }
 
