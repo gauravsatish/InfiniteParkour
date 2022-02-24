@@ -62,6 +62,8 @@ public class ParkourManager {
 
     public void startParkourProcess() {
 
+        if (!player.isOnline()) return;
+
         if (InfiniteParkour.getPlayerJumpCounter().containsKey(player)) {
             InfiniteParkour.getPlayerJumpCounter().remove(player);
         }

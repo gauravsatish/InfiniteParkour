@@ -1,6 +1,8 @@
  - add more parkour stuff, like ladder jumps and maybe neos
  - difficulty levels
  - make the generator more random somehow
+ - make database to save scores
+ -  highscore stuff
 
 
 DONE:

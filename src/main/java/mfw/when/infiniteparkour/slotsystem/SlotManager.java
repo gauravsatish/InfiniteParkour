@@ -3,7 +3,9 @@ package mfw.when.infiniteparkour.slotsystem;
 import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.parkour.JumpCounterSystem;
 import mfw.when.infiniteparkour.parkour.ParkourManager;
+import mfw.when.infiniteparkour.utils.SyncBlockChanger;
 import mfw.when.infiniteparkour.utils.SyncPlayerTeleport;
+import net.minecraft.world.level.block.Blocks;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -51,16 +53,16 @@ public class SlotManager {
     }
 
     private static void setupFloorRow(Block startBlock) {
-        startBlock.setType(Material.GOLD_BLOCK);
-        startBlock.getRelative(0, 0, 1).setType(Material.POLISHED_DIORITE);
+
+        new SyncBlockChanger(startBlock.getLocation(), Blocks.GOLD_BLOCK, false);
 
         for (int i = 1; i <= 14; i++) {
-            startBlock.getRelative(0, 0, i).setType(Material.POLISHED_DIORITE);
+            new SyncBlockChanger(startBlock.getRelative(0, 0, i).getLocation(), Blocks.POLISHED_DIORITE, false);
         }
 
-        startBlock.getRelative(0, 0, 7).setType(Material.DIAMOND_BLOCK);
-        startBlock.getRelative(0, 0, 8).setType(Material.DIAMOND_BLOCK);
-        startBlock.getRelative(0, 0, 15).setType(Material.GOLD_BLOCK);
+        new SyncBlockChanger(startBlock.getLocation().add(0, 0, 7), Blocks.DIAMOND_BLOCK, false);
+        new SyncBlockChanger(startBlock.getLocation().add(0, 0, 8), Blocks.DIAMOND_BLOCK, false);
+        new SyncBlockChanger(startBlock.getLocation().add(0, 0, 15), Blocks.GOLD_BLOCK, false);
 
     }
 
