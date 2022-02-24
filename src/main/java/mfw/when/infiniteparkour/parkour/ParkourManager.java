@@ -22,14 +22,16 @@ import java.util.Random;
 
 public class ParkourManager {
 
-    private final net.minecraft.world.level.block.Block NMS_TARGET_BLOCK = Blocks.INFESTED_CRACKED_STONE_BRICKS;
-    private final net.minecraft.world.level.block.Block NMS_SECOND_BLOCK = Blocks.MOSSY_COBBLESTONE;
-    private final net.minecraft.world.level.block.Block NMS_THIRD_BLOCK = Blocks.FLOWERING_AZALEA_LEAVES;
     private final net.minecraft.world.level.block.Block NMS_PASSED_BLOCK = Blocks.MOSS_BLOCK;
-    private final Material TARGET_BLOCK_MATERIAL = Material.INFESTED_CRACKED_STONE_BRICKS;
-    private final Material SECOND_BLOCK_MATERIAL = Material.MOSSY_COBBLESTONE;
+    private final net.minecraft.world.level.block.Block NMS_TARGET_BLOCK = Blocks.MOSSY_STONE_BRICKS;
+    private final net.minecraft.world.level.block.Block NMS_SECOND_BLOCK = Blocks.INFESTED_CRACKED_STONE_BRICKS;
+    private final net.minecraft.world.level.block.Block NMS_THIRD_BLOCK = Blocks.MOSSY_COBBLESTONE;
+    private final net.minecraft.world.level.block.Block NMS_FOURTH_BLOCK = Blocks.FLOWERING_AZALEA_LEAVES;
     private final Material PASSED_BLOCK_MATERIAL = Material.MOSS_BLOCK;
-    private final Material THIRD_BLOCK_MATERIAL = Material.FLOWERING_AZALEA_LEAVES;
+    private final Material TARGET_BLOCK_MATERIAL = Material.MOSSY_STONE_BRICKS;
+    private final Material SECOND_BLOCK_MATERIAL = Material.INFESTED_CRACKED_STONE_BRICKS;
+    private final Material THIRD_BLOCK_MATERIAL = Material.MOSSY_COBBLESTONE;
+    private final Material FOURTH_BLOCK_MATERIAL = Material.FLOWERING_AZALEA_LEAVES;
 
     private final Random random = new Random();
     private final Player player;
@@ -37,6 +39,7 @@ public class ParkourManager {
     private Block targetBlock;
     private Block secondBlock;
     private Block thirdBlock;
+    private Block fourthBlock;
     private BukkitTask process;
 
     public ParkourManager(Player player, Slot slot) {
@@ -70,7 +73,10 @@ public class ParkourManager {
         new SyncBlockChanger(secondBlock.getLocation(), NMS_SECOND_BLOCK, false).run();
         thirdBlock = getNextBlock(secondBlock.getLocation());
         new SyncBlockChanger(thirdBlock.getLocation(), NMS_THIRD_BLOCK, false).run();
-        thirdBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
+        fourthBlock = getNextBlock(thirdBlock.getLocation());
+        new SyncBlockChanger(fourthBlock.getLocation(), NMS_FOURTH_BLOCK, false).run();
+
+        fourthBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
 
 
         process = new BukkitRunnable() {
@@ -81,15 +87,17 @@ public class ParkourManager {
                     InfiniteParkour.getPlayerJumpCounter().put(player, InfiniteParkour.getPlayerJumpCounter().get(player) + 1);
                     JumpCounterSystem.update(player);
 
+                    new SyncBlockChanger(fourthBlock.getLocation(), NMS_THIRD_BLOCK, false).run();
                     new SyncBlockChanger(thirdBlock.getLocation(), NMS_SECOND_BLOCK, false).run();
                     new SyncBlockChanger(targetBlock.getLocation(), NMS_PASSED_BLOCK, false).run();
                     new SyncBlockChanger(secondBlock.getLocation(), NMS_TARGET_BLOCK, false).run();
                     targetBlock = secondBlock;
                     secondBlock = thirdBlock;
-                    thirdBlock = getNextBlock(thirdBlock.getLocation());
-                    thirdBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
-                    new SyncBlockChanger(thirdBlock.getLocation(), NMS_THIRD_BLOCK, false).run();
-                    playBlockGenAnimation(thirdBlock);
+                    thirdBlock = fourthBlock;
+                    fourthBlock = getNextBlock(fourthBlock.getLocation());
+                    fourthBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
+                    new SyncBlockChanger(fourthBlock.getLocation(), NMS_FOURTH_BLOCK, false).run();
+                    playBlockGenAnimation(fourthBlock);
                 }
 
                 if (player.getVelocity().getY() < -2) {
