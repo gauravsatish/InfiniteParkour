@@ -136,7 +136,7 @@ public class ParkourManager {
             int counter = 0;
             @Override
             public void run() {
-                new ParticleBuilder(ParticleEffect.FALLING_SPORE_BLOSSOM, block.getLocation().add(0.5, 0.5, 0.5).add((float) (random.nextDouble(2.0) - 1) / 1.25, (float) (random.nextDouble(2.0) - 1) / 1.25, (float) (random.nextDouble(2.0) - 1) / 1.25))
+                new ParticleBuilder(ParticleEffect.CLOUD, block.getLocation().add(0.5, 0.5, 0.5).add((float) (random.nextDouble(2.0) - 1) / 1.25, (float) (random.nextDouble(2.0) - 1) / 1.25, (float) (random.nextDouble(2.0) - 1) / 1.25))
                         .setSpeed(0.1f)
                         .setColor(new Color(135, 206, 250))
                         .display(player);
@@ -158,14 +158,14 @@ public class ParkourManager {
         if (block.getLocation().getBlockZ() >= slot.getMaxZ()) {
             int displaceOffset = (int) (block.getLocation().getBlockZ() - slot.getMaxZ());
             if (displaceOffset == 0) {
-                block = block.getLocation().add(0, 0, -1).getBlock();
+                block = block.getLocation().add(0, 0, -2).getBlock();
             } else {
                 block = block.getLocation().add(0, 0, -2 * displaceOffset).getBlock();
             }
         } else if (block.getLocation().getBlockZ() <= slot.getMinZ()) {
             int displaceOffset = (int) (slot.getMinZ() - block.getLocation().getBlockZ());
             if (displaceOffset == 0) {
-                block = block.getLocation().add(0, 0, 1).getBlock();
+                block = block.getLocation().add(0, 0, 2).getBlock();
             } else {
                 block = block.getLocation().add(0, 0, 2 * displaceOffset).getBlock();
             }

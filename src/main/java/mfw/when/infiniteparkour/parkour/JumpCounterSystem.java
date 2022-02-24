@@ -16,12 +16,11 @@ public class JumpCounterSystem {
     private static final ArrayList<Player> players = new ArrayList<>();
 
     public static void start() {
-        process = Bukkit.getScheduler().runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                for (Player player : players) {
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, getMessage(player));
-                }
+        process = Bukkit.getScheduler().runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), () -> {
+            ArrayList<Player> p = new ArrayList<>();
+            p.addAll(players);
+            for (Player player : p) {
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, getMessage(player));
             }
         }, 0, 10);
     }
@@ -32,6 +31,7 @@ public class JumpCounterSystem {
 
     public static void removePlayer(Player player) {
         players.remove(player);
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(""));
     }
 
     public static void update(Player player) {
