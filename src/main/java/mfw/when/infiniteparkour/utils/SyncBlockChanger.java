@@ -26,7 +26,7 @@ public class SyncBlockChanger {
         this.withParticles = withParticles;
     }
 
-    public void run() {
+    public org.bukkit.block.Block run() {
         Bukkit.getScheduler().runTask(InfiniteParkour.getPlugin(), new Runnable() {
             @Override
             public void run() {
@@ -50,5 +50,7 @@ public class SyncBlockChanger {
                 }
             }
         });
+
+        return loc.getBlock();
     }
 }

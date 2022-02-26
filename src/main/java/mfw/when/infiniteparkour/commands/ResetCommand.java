@@ -1,6 +1,5 @@
 package mfw.when.infiniteparkour.commands;
 
-import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.slotsystem.SlotManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

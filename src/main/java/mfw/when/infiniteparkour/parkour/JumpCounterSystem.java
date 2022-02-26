@@ -12,14 +12,13 @@ import java.util.ArrayList;
 
 public class JumpCounterSystem {
 
-    private static BukkitTask process;
     private static final ArrayList<Player> players = new ArrayList<>();
+    private static BukkitTask process;
 
     public static void start() {
+        InfiniteParkour.getPlugin().getLogger().info("tracker system started");
         process = Bukkit.getScheduler().runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), () -> {
-            ArrayList<Player> p = new ArrayList<>();
-            p.addAll(players);
-            for (Player player : p) {
+            for (Player player : players) {
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, getMessage(player));
             }
         }, 0, 10);

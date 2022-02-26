@@ -16,7 +16,7 @@ public class PlayerManager implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        e.getPlayer().sendTitle(ChatColor.GOLD + "/infiniteparkour", ChatColor.ITALIC + "do it", 5, 40, 10);
+        e.getPlayer().sendTitle(ChatColor.GOLD + "Infinite Parkour", "", 5, 40, 10);
         e.getPlayer().setFoodLevel(20);
         e.getPlayer().setHealth(20);
         Location spawnLocation = e.getPlayer().getWorld().getSpawnLocation();

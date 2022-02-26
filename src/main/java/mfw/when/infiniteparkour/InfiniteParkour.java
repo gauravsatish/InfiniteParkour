@@ -2,12 +2,13 @@ package mfw.when.infiniteparkour;
 
 import mfw.when.infiniteparkour.commands.*;
 import mfw.when.infiniteparkour.listeners.LeafDecayListener;
+import mfw.when.infiniteparkour.listeners.PlayerManager;
 import mfw.when.infiniteparkour.parkour.JumpCounterSystem;
 import mfw.when.infiniteparkour.parkour.ParkourManager;
-import mfw.when.infiniteparkour.listeners.PlayerManager;
 import mfw.when.infiniteparkour.slotsystem.Slot;
 import mfw.when.infiniteparkour.slotsystem.SlotManager;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;

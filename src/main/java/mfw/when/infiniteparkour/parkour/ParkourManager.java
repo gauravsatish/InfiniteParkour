@@ -11,11 +11,14 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.type.Ladder;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 import xyz.xenondevs.particle.ParticleBuilder;
 import xyz.xenondevs.particle.ParticleEffect;
 
@@ -29,10 +32,11 @@ public class ParkourManager {
     private final Random random = new Random();
     private final Player player;
     private final Slot slot;
-    private Block targetBlock;
-    private Block secondBlock;
-    private Block thirdBlock;
-    private Block fourthBlock;
+    private final JumpGetterIDKWhatToCallThis jumpGetterIDKWhatToCallThis = new JumpGetterIDKWhatToCallThis();
+    //    private Block targetBlock;
+//    private Block secondBlock;
+//    private Block thirdBlock;
+    private Block endBlock;
     private BukkitTask process;
     private int counter = 1;
 
@@ -56,30 +60,59 @@ public class ParkourManager {
         return slot;
     }
 
+    public JumpGetterIDKWhatToCallThis getJumpGetterIDKWhatToCallThis() {
+        return jumpGetterIDKWhatToCallThis;
+    }
+
     public BukkitTask getProcess() {
         return process;
     }
+
+    private void playBlockGenAnimation(Block block) {
+        new BukkitRunnable() {
+            int counter = 0;
+
+            @Override
+            public void run() {
+                new ParticleBuilder(ParticleEffect.CLOUD, block.getLocation().add(0.5, 0.5, 0.5).add((float) (random.nextDouble(2.0) - 1) / 1.25, (float) (random.nextDouble(2.0) - 1) / 1.25, (float) (random.nextDouble(2.0) - 1) / 1.25))
+                        .setSpeed(0.1f)
+                        .display(player);
+                counter++;
+                if (counter == 10) {
+                    cancel();
+                }
+            }
+        }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 0, 1);
+    }
+
+
+    // PARKOURING STUFF
 
     public void startParkourProcess() {
 
         if (!player.isOnline()) return;
 
-        if (InfiniteParkour.getPlayerJumpCounter().containsKey(player)) {
-            InfiniteParkour.getPlayerJumpCounter().remove(player);
-        }
-
+        InfiniteParkour.getPlayerJumpCounter().remove(player);
         InfiniteParkour.getPlayerJumpCounter().put(player, 0);
 
-        targetBlock = getNextBlock(new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT, slot.getMiddleZ()[1]));
-        new SyncBlockChanger(targetBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
-        secondBlock = getNextBlock(targetBlock.getLocation());
-        new SyncBlockChanger(secondBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
-        thirdBlock = getNextBlock(secondBlock.getLocation());
-        new SyncBlockChanger(thirdBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
-        fourthBlock = getNextBlock(thirdBlock.getLocation());
-        new SyncBlockChanger(fourthBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
+//        targetBlock = blockJump(new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT, slot.getMiddleZ()[1]));
+//        new SyncBlockChanger(targetBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
+//        secondBlock = blockJump(targetBlock.getLocation());
+//        new SyncBlockChanger(secondBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
+//        thirdBlock = blockJump(secondBlock.getLocation());
+//        new SyncBlockChanger(thirdBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
+//        endBlock = blockJump(thirdBlock.getLocation());
+//        new SyncBlockChanger(endBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
 
-        fourthBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
+        endBlock = blockJump(new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT, slot.getMiddleZ()[1]));
+        new SyncBlockChanger(endBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
+        jumpGetterIDKWhatToCallThis.setCooldown(20);
+        for (int i = 1; i <= 3; i++) {
+            endBlock = blockJump(endBlock.getLocation());
+            new SyncBlockChanger(endBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
+        }
+
+        endBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
 
 
         process = new BukkitRunnable() {
@@ -89,16 +122,12 @@ public class ParkourManager {
                     if (value.asInt() > InfiniteParkour.getPlayerJumpCounter().get(player)) {
                         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.1f, (float) Math.random());
                         for (int i = 0; i <= (value.asInt() - InfiniteParkour.getPlayerJumpCounter().get(player)); i++) {
-                            Collections.shuffle(blocks);
                             InfiniteParkour.getPlayerJumpCounter().put(player, InfiniteParkour.getPlayerJumpCounter().get(player) + 1);
                             JumpCounterSystem.update(player);
 
-                            targetBlock = secondBlock;
-                            secondBlock = thirdBlock;
-                            thirdBlock = fourthBlock;
-                            fourthBlock = getNextBlock(fourthBlock.getLocation());
-                            new SyncBlockChanger(fourthBlock.getLocation(), blocks.get(0), false).run();
-                            playBlockGenAnimation(fourthBlock);
+                            jumpGetterIDKWhatToCallThis.decrementCooldown();
+
+                            getNextJump();
                         }
                     }
                 }
@@ -123,33 +152,39 @@ public class ParkourManager {
         });
     }
 
+    private void getNextJump() {
+        JumpType jumpType = jumpGetterIDKWhatToCallThis.getNextJumpType();
+        switch (jumpType) {
+            case BLOCK:
+                endBlock = getNextBlockJump();
+                break;
+            case NEO:
+                endBlock = neoJump(endBlock);
+                break;
+            case LADDER:
+                endBlock = ladderJump(endBlock);
+        }
+    }
+
+    private Block getNextBlockJump() {
+        Collections.shuffle(blocks);
+        Block block = blockJump(endBlock.getLocation());
+        new SyncBlockChanger(block.getLocation(), blocks.get(0), false).run();
+        return block;
+    }
+
     public void stopParkourProcess(boolean onDisable) {
         slot.getLog().resetBlocks(onDisable);
         process.cancel();
-        targetBlock = null;
-        secondBlock = null;
-        thirdBlock = null;
-        fourthBlock = null;
+        endBlock = null;
         counter = 1;
+        jumpGetterIDKWhatToCallThis.reset();
     }
 
-    private void playBlockGenAnimation(Block block) {
-        new BukkitRunnable() {
-            int counter = 0;
-            @Override
-            public void run() {
-                new ParticleBuilder(ParticleEffect.CLOUD, block.getLocation().add(0.5, 0.5, 0.5).add((float) (random.nextDouble(2.0) - 1) / 1.25, (float) (random.nextDouble(2.0) - 1) / 1.25, (float) (random.nextDouble(2.0) - 1) / 1.25))
-                        .setSpeed(0.1f)
-                        .display(player);
-                counter++;
-                if (counter == 10) {
-                    cancel();
-                }
-            }
-        }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 0, 1);
-    }
 
-    private Block getNextBlock(Location loc) {
+    // BLOCK JUMP METHODS
+
+    private Block blockJump(Location loc) {
         int height = generateHeight();
         int forwardLength = generateForwardLength();
         int offset = generateSidewaysOffset();
@@ -172,11 +207,12 @@ public class ParkourManager {
             }
         }
 
-        block.setMetadata("counter", new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
-
         slot.getLog().addBlock(block);
 
+        block.setMetadata("counter", new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
         counter++;
+
+        playBlockGenAnimation(block);
         return block;
     }
 
@@ -208,4 +244,72 @@ public class ParkourManager {
         }
         return height;
     }
+
+
+    // LADDER JUMP METHODS
+
+    public Block ladderJump(@NotNull Block startBlock) {
+
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(3, 1, 0), Blocks.MOSS_BLOCK, false).run());
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(3, 2, 0), Blocks.MOSS_BLOCK, false).run());
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(3, 3, 0), Blocks.MOSS_BLOCK, false).run());
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(3, 4, 0), Blocks.MOSS_BLOCK, false).run());
+
+        Bukkit.getScheduler().runTask(InfiniteParkour.getPlugin(), () -> {
+            Block ladder1Block = startBlock.getRelative(2, 1, 0);
+            ladder1Block.setType(Material.LADDER);
+            Ladder ladder1 = (Ladder) ladder1Block.getBlockData();
+            ladder1.setFacing(BlockFace.WEST);
+            ladder1Block.setBlockData(ladder1);
+            slot.getLog().addBlock(ladder1Block);
+
+            Block ladder2Block = startBlock.getRelative(3, 2, 1);
+            ladder2Block.setType(Material.LADDER);
+            Ladder ladder2 = (Ladder) ladder2Block.getBlockData();
+            ladder2.setFacing(BlockFace.SOUTH);
+            ladder2Block.setBlockData(ladder2);
+            slot.getLog().addBlock(ladder2Block);
+
+            Block ladder3block = startBlock.getRelative(4, 3, 0);
+            ladder3block.setType(Material.LADDER);
+            Ladder ladder3 = (Ladder) ladder3block.getBlockData();
+            ladder3.setFacing(BlockFace.EAST);
+            ladder3block.setBlockData(ladder3);
+            slot.getLog().addBlock(ladder3block);
+        });
+
+        Block end = startBlock.getRelative(3, 4, 0);
+
+        end.setMetadata("counter", new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
+        counter++;
+
+        return end;
+    }
+
+
+    // NEO JUMP METHODS
+
+    public Block neoJump(@NotNull Block startBlock) {
+
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(1, 0, 0), Blocks.MOSS_BLOCK, false).run());
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(2, 0, 0), Blocks.MOSS_BLOCK, false).run());
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(3, 0, 0), Blocks.MOSS_BLOCK, false).run());
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(4, 0, 0), Blocks.MOSS_BLOCK, false).run());
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(5, 0, 0), Blocks.MOSS_BLOCK, false).run());
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(6, 0, 0), Blocks.MOSS_BLOCK, false).run());
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(7, 0, 0), Blocks.MOSS_BLOCK, false).run());
+
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(4, 1, 0), Blocks.MOSS_BLOCK, false).run());
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(4, 2, 0), Blocks.MOSSY_STONE_BRICKS, false).run());
+        slot.getLog().addBlock(new SyncBlockChanger(startBlock.getLocation().add(4, 3, 0), Blocks.MOSSY_COBBLESTONE, false).run());
+
+        Block end = startBlock.getRelative(7, 0, 0);
+        end.setMetadata("counter", new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
+        startBlock.getRelative(6, 0, 0).setMetadata("counter", new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
+        startBlock.getRelative(5, 0, 0).setMetadata("counter", new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
+        counter++;
+
+        return end;
+    }
+
 }

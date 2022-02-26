@@ -3,6 +3,7 @@
  - make the generator more random somehow
  - make database to save scores
  -  highscore stuff
+ - make it check height limit as well
 
 
 DONE:
