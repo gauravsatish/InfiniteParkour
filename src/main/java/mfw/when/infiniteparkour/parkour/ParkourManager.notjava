@@ -112,9 +112,6 @@ public class ParkourManager {
             new SyncBlockChanger(endBlock.getLocation(), blocks.get((int) (Math.random() * blocks.size())), false).run();
         }
 
-        endBlock.setMetadata("no_decay", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
-
-
         process = new BukkitRunnable() {
             @Override
             public void run() {

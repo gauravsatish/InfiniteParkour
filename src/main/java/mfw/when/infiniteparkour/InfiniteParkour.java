@@ -4,7 +4,7 @@ import mfw.when.infiniteparkour.commands.*;
 import mfw.when.infiniteparkour.listeners.LeafDecayListener;
 import mfw.when.infiniteparkour.listeners.PlayerManager;
 import mfw.when.infiniteparkour.parkour.JumpCounterSystem;
-import mfw.when.infiniteparkour.parkour.ParkourManager;
+import mfw.when.infiniteparkour.parkour_rewrite.ParkourManager_REWRITE;
 import mfw.when.infiniteparkour.slotsystem.Slot;
 import mfw.when.infiniteparkour.slotsystem.SlotManager;
 import org.bukkit.Bukkit;
@@ -20,20 +20,15 @@ public final class InfiniteParkour extends JavaPlugin {
 
     public static final double PARKOUR_HEIGHT = 100;
     private static final HashMap<Player, Integer> playerJumpCounter = new HashMap<>();
-    private static final HashMap<Player, ParkourManager> playerParkourManager = new HashMap<>();
-    private static final HashMap<Player, BukkitTask> velocityTrackerProcesses = new HashMap<>();
+    private static final HashMap<Player, ParkourManager_REWRITE> playerParkourManager = new HashMap<>();
     private static Plugin plugin;
 
     public static Plugin getPlugin() {
         return plugin;
     }
 
-    public static HashMap<Player, ParkourManager> getPlayerParkourManager() {
+    public static HashMap<Player, ParkourManager_REWRITE> getPlayerParkourManager() {
         return playerParkourManager;
-    }
-
-    public static HashMap<Player, BukkitTask> getVelocityTrackerProcesses() {
-        return velocityTrackerProcesses;
     }
 
     public static HashMap<Player, Integer> getPlayerJumpCounter() {
@@ -68,7 +63,7 @@ public final class InfiniteParkour extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         for (Slot slot : SlotManager.getParkourMGRs().keySet()) {
-            SlotManager.getParkourMGRs().get(slot).stopParkourProcess(true);
+            SlotManager.getParkourMGRs().get(slot).stop(false, true);
         }
     }
 }
