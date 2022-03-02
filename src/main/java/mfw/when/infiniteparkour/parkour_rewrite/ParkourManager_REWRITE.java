@@ -4,7 +4,10 @@ import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.parkour.JumpCounterSystem;
 import mfw.when.infiniteparkour.parkour.JumpGetterIDKWhatToCallThis;
 import mfw.when.infiniteparkour.parkour_rewrite.jumps.BlockJump;
+import mfw.when.infiniteparkour.parkour_rewrite.jumps.LadderJump;
+import mfw.when.infiniteparkour.parkour_rewrite.jumps.NeoJump;
 import mfw.when.infiniteparkour.slotsystem.Slot;
+import mfw.when.infiniteparkour.slotsystem.SlotManager;
 import mfw.when.infiniteparkour.utils.SyncBlockChanger;
 import mfw.when.infiniteparkour.utils.SyncPlayerTeleport;
 import net.minecraft.world.level.block.Block;
@@ -40,6 +43,9 @@ public class ParkourManager_REWRITE {
     public ParkourManager_REWRITE(Player player, Slot slot) {
         this.player = player;
         this.slot = slot;
+
+        SlotManager.resetPlayer(player);
+
         this.SLOT_START_LOC = new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT, slot.getMiddleZ()[1], -90f, 0f);
         this.block = SLOT_START_LOC.getBlock();
 
@@ -57,7 +63,6 @@ public class ParkourManager_REWRITE {
         InfiniteParkour.getPlayerJumpCounter().put(player, 0);
 
         this.block = SLOT_START_LOC.getBlock();
-
         jumpGetterIDKWhatToCallThis.setCooldown(20);
         for (int i = 0; i < 3; i++) doBlockJump();
 
@@ -68,10 +73,7 @@ public class ParkourManager_REWRITE {
                     if (value.asInt() > InfiniteParkour.getPlayerJumpCounter().get(player)) {
                         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.1f, (float) Math.random());
                         for (int i = 0; i <= (value.asInt() - InfiniteParkour.getPlayerJumpCounter().get(player)); i++) {
-                            InfiniteParkour.getPlayerJumpCounter().put(player, InfiniteParkour.getPlayerJumpCounter().get(player) + 1);
-                            JumpCounterSystem.update(player);
-                            jumpGetterIDKWhatToCallThis.decrementCooldown();
-                            doBlockJump();
+                            trigger();
                         }
                     }
                 }
@@ -82,6 +84,20 @@ public class ParkourManager_REWRITE {
                 }
             }
         }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 0, 2);
+    }
+
+    public void trigger() {
+        InfiniteParkour.getPlayerJumpCounter().put(player, InfiniteParkour.getPlayerJumpCounter().get(player) + 1);
+        JumpCounterSystem.update(player);
+        jumpGetterIDKWhatToCallThis.decrementCooldown();
+
+        switch (jumpGetterIDKWhatToCallThis.getNextJumpType()) {
+            case BLOCK -> doBlockJump();
+            case NEO -> doNeoJump();
+            case LADDER -> doLadderJump();
+        }
+
+        doBlockJump();
     }
 
     public void stop(boolean restart, boolean onDisable) {
@@ -97,6 +113,7 @@ public class ParkourManager_REWRITE {
 
     private void doBlockJump() {
         block = checkWithinBounds(BlockJump.jump(block.getLocation())).getBlock();
+        InfiniteParkour.getPlugin().getLogger().info("returned block check XYZ: " + block.getLocation().getBlockX() + " " + block.getLocation().getBlockY() + " " + block.getLocation().getBlockZ());
         new SyncBlockChanger(block.getLocation(), getRandomBlockType(), true).run();
 
         block.setMetadata(COUNTER_METADATA_VALUE, new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
@@ -104,6 +121,33 @@ public class ParkourManager_REWRITE {
         slot.getLog().addBlock(block);
 
         playBlockGenAnimation(block);
+    }
+
+    private void doLadderJump() {
+        for (Location loc : LadderJump.jump(block.getLocation())) {
+            this.slot.getLog().addBlock(loc.getBlock());
+            this.playBlockGenAnimation(loc.getBlock());
+        }
+
+        org.bukkit.block.Block endBlock = LadderJump.getEndBlock(block.getLocation()).getBlock();
+        endBlock.setMetadata(COUNTER_METADATA_VALUE, new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
+        counter++;
+
+        this.block = endBlock;
+
+    }
+
+    private void doNeoJump() {
+        for (Location loc : NeoJump.jump(block.getLocation())) {
+            this.slot.getLog().addBlock(loc.getBlock());
+            this.playBlockGenAnimation(loc.getBlock());
+        }
+        org.bukkit.block.Block endBlock = NeoJump.getEndBlock(block.getLocation()).getBlock();
+        for (int i = 5; i <= 7; i++) {
+            endBlock.getRelative(i, 0, 0).setMetadata(COUNTER_METADATA_VALUE, new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
+        }
+        counter++;
+        this.block = endBlock;
     }
 
     private void playBlockGenAnimation(org.bukkit.block.Block theBlock) {

@@ -1,12 +1,15 @@
 package mfw.when.infiniteparkour.commands;
 
-import mfw.when.infiniteparkour.parkour.JumpGetterIDKWhatToCallThis;
-import mfw.when.infiniteparkour.parkour.JumpType;
+import mfw.when.infiniteparkour.InfiniteParkour;
+import mfw.when.infiniteparkour.parkour.InfiniteParkourInstance;
+import mfw.when.infiniteparkour.parkour_rewrite.ParkourManager_REWRITE;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class TestCommand implements CommandExecutor {
 
@@ -18,23 +21,37 @@ public class TestCommand implements CommandExecutor {
             if (!player.isOp()) {
                 player.sendMessage(ChatColor.RED + "Nothing to see here");
             } else {
-                if (args[0].equals("jumpchance")) {
-                    JumpGetterIDKWhatToCallThis wsdf = new JumpGetterIDKWhatToCallThis();
-                    wsdf.setCooldown(20);
-                    for (int i = 0; i < Integer.parseInt(args[1]); i++) {
-                        player.sendMessage(wsdf.getNextJumpType().name());
-                        wsdf.decrementCooldown();
-                    }
-                } else if (args[0].equals("jtvalues")) {
-                    for (int i = 1; i <= 10; i++) {
-                        for (JumpType jumpType : JumpType.values()) {
-                            player.sendMessage(jumpType.name());
-                        }
-                    }
+                int repetitions = 0;
+                try {
+                    repetitions = Integer.parseInt(args[0]);
+                } catch (NumberFormatException e) {
+                    player.sendMessage(ChatColor.RED + "Invalid number");
+                    return false;
                 }
+
+                player.setGameMode(GameMode.SPECTATOR);
+
+                InfiniteParkourInstance instance = new InfiniteParkourInstance(player);
+                ParkourManager_REWRITE manager = instance.getParkourManager();
+                int finalRepetitions = repetitions;
+                new BukkitRunnable() {
+                    int counter = 0;
+
+                    @Override
+                    public void run() {
+                        manager.trigger();
+
+                        if (counter >= finalRepetitions) {
+                            cancel();
+                        }
+
+                        counter++;
+                    }
+                }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 20, 2);
+
             }
         }
 
-        return false;
+        return true;
     }
 }

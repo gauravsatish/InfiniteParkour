@@ -37,12 +37,12 @@ public class BlockJump {
     private static int getHeight() {
         int height = random.nextInt(3) - 1;
 
-        if (height == -1) {
-            int decreaseChance = random.nextInt(100);
-            if (decreaseChance >= 40) {
-                height = 0;
-            }
-        }
+//        if (height == -1) {
+//            int decreaseChance = random.nextInt(100);
+//            if (decreaseChance >= 40) {
+//                height = 0;
+//            }
+//        }
         return height;
     }
 

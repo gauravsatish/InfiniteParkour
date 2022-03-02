@@ -20,7 +20,7 @@ public class InfiniteParkourInstance {
         slot = SlotManager.getNewSlot();
         SlotManager.setupSlot(slot);
 
-        this.player.setGameMode(GameMode.ADVENTURE);
+        if (!player.isOp()) this.player.setGameMode(GameMode.ADVENTURE);
 
         this.parkourManager = new ParkourManager_REWRITE(this.player, slot);
         this.slot.attachParkourMGR(parkourManager);
@@ -28,4 +28,15 @@ public class InfiniteParkourInstance {
         parkourManager.start();
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Slot getSlot() {
+        return slot;
+    }
+
+    public ParkourManager_REWRITE getParkourManager() {
+        return parkourManager;
+    }
 }
