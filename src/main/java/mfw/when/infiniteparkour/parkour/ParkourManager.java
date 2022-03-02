@@ -1,11 +1,11 @@
-package mfw.when.infiniteparkour.parkour_rewrite;
+package mfw.when.infiniteparkour.parkour;
 
 import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.parkour.JumpCounterSystem;
 import mfw.when.infiniteparkour.parkour.JumpGetterIDKWhatToCallThis;
-import mfw.when.infiniteparkour.parkour_rewrite.jumps.BlockJump;
-import mfw.when.infiniteparkour.parkour_rewrite.jumps.LadderJump;
-import mfw.when.infiniteparkour.parkour_rewrite.jumps.NeoJump;
+import mfw.when.infiniteparkour.parkour.jumps.BlockJump;
+import mfw.when.infiniteparkour.parkour.jumps.LadderJump;
+import mfw.when.infiniteparkour.parkour.jumps.NeoJump;
 import mfw.when.infiniteparkour.slotsystem.Slot;
 import mfw.when.infiniteparkour.slotsystem.SlotManager;
 import mfw.when.infiniteparkour.utils.SyncBlockChanger;
@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -26,7 +27,7 @@ import xyz.xenondevs.particle.ParticleEffect;
 import java.security.SecureRandom;
 import java.util.List;
 
-public class ParkourManager_REWRITE {
+public class ParkourManager {
 
     private static final String COUNTER_METADATA_VALUE = "counter";
     private static final List<Block> blocks = List.of(Blocks.MOSS_BLOCK, Blocks.MOSSY_COBBLESTONE, Blocks.CRACKED_STONE_BRICKS, Blocks.MOSSY_STONE_BRICKS, Blocks.FLOWERING_AZALEA_LEAVES);
@@ -40,7 +41,7 @@ public class ParkourManager_REWRITE {
     private org.bukkit.block.Block block;
     private BukkitTask process;
 
-    public ParkourManager_REWRITE(Player player, Slot slot) {
+    public ParkourManager(Player player, Slot slot) {
         this.player = player;
         this.slot = slot;
 
@@ -96,8 +97,6 @@ public class ParkourManager_REWRITE {
             case NEO -> doNeoJump();
             case LADDER -> doLadderJump();
         }
-
-        doBlockJump();
     }
 
     public void stop(boolean restart, boolean onDisable) {
@@ -113,7 +112,6 @@ public class ParkourManager_REWRITE {
 
     private void doBlockJump() {
         block = checkWithinBounds(BlockJump.jump(block.getLocation())).getBlock();
-        InfiniteParkour.getPlugin().getLogger().info("returned block check XYZ: " + block.getLocation().getBlockX() + " " + block.getLocation().getBlockY() + " " + block.getLocation().getBlockZ());
         new SyncBlockChanger(block.getLocation(), getRandomBlockType(), true).run();
 
         block.setMetadata(COUNTER_METADATA_VALUE, new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
@@ -126,6 +124,9 @@ public class ParkourManager_REWRITE {
     private void doLadderJump() {
         for (Location loc : LadderJump.jump(block.getLocation())) {
             this.slot.getLog().addBlock(loc.getBlock());
+            if (loc.getBlock().getType().equals(Material.LADDER)) {
+                InfiniteParkour.getPlugin().getLogger().info("LADDER found in output array");
+            }
             this.playBlockGenAnimation(loc.getBlock());
         }
 

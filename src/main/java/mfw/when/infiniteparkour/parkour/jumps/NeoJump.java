@@ -1,4 +1,4 @@
-package mfw.when.infiniteparkour.parkour_rewrite.jumps;
+package mfw.when.infiniteparkour.parkour.jumps;
 
 import mfw.when.infiniteparkour.utils.SyncBlockChanger;
 import net.minecraft.world.level.block.Blocks;

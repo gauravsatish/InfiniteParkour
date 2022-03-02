@@ -4,7 +4,7 @@ import mfw.when.infiniteparkour.commands.*;
 import mfw.when.infiniteparkour.listeners.LeafDecayListener;
 import mfw.when.infiniteparkour.listeners.PlayerManager;
 import mfw.when.infiniteparkour.parkour.JumpCounterSystem;
-import mfw.when.infiniteparkour.parkour_rewrite.ParkourManager_REWRITE;
+import mfw.when.infiniteparkour.parkour.ParkourManager;
 import mfw.when.infiniteparkour.slotsystem.Slot;
 import mfw.when.infiniteparkour.slotsystem.SlotManager;
 import org.bukkit.Bukkit;
@@ -12,7 +12,6 @@ import org.bukkit.GameRule;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 
@@ -20,14 +19,14 @@ public final class InfiniteParkour extends JavaPlugin {
 
     public static final double PARKOUR_HEIGHT = 100;
     private static final HashMap<Player, Integer> playerJumpCounter = new HashMap<>();
-    private static final HashMap<Player, ParkourManager_REWRITE> playerParkourManager = new HashMap<>();
+    private static final HashMap<Player, ParkourManager> playerParkourManager = new HashMap<>();
     private static Plugin plugin;
 
     public static Plugin getPlugin() {
         return plugin;
     }
 
-    public static HashMap<Player, ParkourManager_REWRITE> getPlayerParkourManager() {
+    public static HashMap<Player, ParkourManager> getPlayerParkourManager() {
         return playerParkourManager;
     }
 

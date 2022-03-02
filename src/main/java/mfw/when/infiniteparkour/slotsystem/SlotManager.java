@@ -2,7 +2,7 @@ package mfw.when.infiniteparkour.slotsystem;
 
 import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.parkour.JumpCounterSystem;
-import mfw.when.infiniteparkour.parkour_rewrite.ParkourManager_REWRITE;
+import mfw.when.infiniteparkour.parkour.ParkourManager;
 import mfw.when.infiniteparkour.utils.SyncBlockChanger;
 import net.minecraft.world.level.block.Blocks;
 import org.bukkit.Bukkit;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class SlotManager {
 
     private static final HashMap<Integer, Slot> slotHashMap = new HashMap<>();
-    private static final HashMap<Slot, ParkourManager_REWRITE> parkourMGRs = new HashMap<>();
+    private static final HashMap<Slot, ParkourManager> parkourMGRs = new HashMap<>();
 
     private static final World world = Bukkit.getWorld("world");
 
@@ -33,7 +33,7 @@ public class SlotManager {
 
         if (InfiniteParkour.getPlayerParkourManager().containsKey(player)) {
 
-            ParkourManager_REWRITE pm = InfiniteParkour.getPlayerParkourManager().get(player);
+            ParkourManager pm = InfiniteParkour.getPlayerParkourManager().get(player);
 
             pm.getSlot().getLog().resetBlocks(false);
             pm.getProcess().cancel();
@@ -67,7 +67,7 @@ public class SlotManager {
         return slotHashMap.getOrDefault(slotNumber, null);
     }
 
-    public static HashMap<Slot, ParkourManager_REWRITE> getParkourMGRs() {
+    public static HashMap<Slot, ParkourManager> getParkourMGRs() {
         return parkourMGRs;
     }
 

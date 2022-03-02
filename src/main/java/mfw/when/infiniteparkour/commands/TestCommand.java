@@ -2,7 +2,7 @@ package mfw.when.infiniteparkour.commands;
 
 import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.parkour.InfiniteParkourInstance;
-import mfw.when.infiniteparkour.parkour_rewrite.ParkourManager_REWRITE;
+import mfw.when.infiniteparkour.parkour.ParkourManager;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -32,7 +32,7 @@ public class TestCommand implements CommandExecutor {
                 player.setGameMode(GameMode.SPECTATOR);
 
                 InfiniteParkourInstance instance = new InfiniteParkourInstance(player);
-                ParkourManager_REWRITE manager = instance.getParkourManager();
+                ParkourManager manager = instance.getParkourManager();
                 int finalRepetitions = repetitions;
                 new BukkitRunnable() {
                     int counter = 0;

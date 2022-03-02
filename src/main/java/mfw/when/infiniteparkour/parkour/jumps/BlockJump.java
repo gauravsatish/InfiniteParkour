@@ -1,4 +1,4 @@
-package mfw.when.infiniteparkour.parkour_rewrite.jumps;
+package mfw.when.infiniteparkour.parkour.jumps;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;

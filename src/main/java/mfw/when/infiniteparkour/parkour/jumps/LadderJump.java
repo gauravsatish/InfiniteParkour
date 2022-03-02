@@ -1,4 +1,4 @@
-package mfw.when.infiniteparkour.parkour_rewrite.jumps;
+package mfw.when.infiniteparkour.parkour.jumps;
 
 import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.utils.SyncBlockChanger;
@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Ladder;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class LadderJump {
             ladder1.setFacing(BlockFace.WEST);
             ladder1Block.setBlockData(ladder1);
             blockOutput.add(ladder1Block.getLocation());
+            InfiniteParkour.getPlugin().getLogger().info("set ladder1 to output array");
 
             Block ladder2Block = loc.clone().add(3, 2, 1).getBlock();
             ladder2Block.setType(Material.LADDER);
@@ -32,6 +34,7 @@ public class LadderJump {
             ladder2.setFacing(BlockFace.SOUTH);
             ladder2Block.setBlockData(ladder2);
             blockOutput.add(ladder2Block.getLocation());
+            InfiniteParkour.getPlugin().getLogger().info("set ladder2 to output array");
 
             Block ladder3block = loc.clone().add(4, 3, 0).getBlock();
             ladder3block.setType(Material.LADDER);
@@ -39,12 +42,19 @@ public class LadderJump {
             ladder3.setFacing(BlockFace.EAST);
             ladder3block.setBlockData(ladder3);
             blockOutput.add(ladder3block.getLocation());
+            InfiniteParkour.getPlugin().getLogger().info("set ladder3 to output array");
         });
 
-        blockOutput.add(new SyncBlockChanger(loc.clone().add(3, 1, 0), Blocks.MOSS_BLOCK, false).run().getLocation());
-        blockOutput.add(new SyncBlockChanger(loc.clone().add(3, 2, 0), Blocks.MOSS_BLOCK, false).run().getLocation());
-        blockOutput.add(new SyncBlockChanger(loc.clone().add(3, 3, 0), Blocks.MOSS_BLOCK, false).run().getLocation());
-        blockOutput.add(new SyncBlockChanger(loc.clone().add(3, 4, 0), Blocks.MOSS_BLOCK, false).run().getLocation());
+        ArrayList<Block> mainBlocks = new ArrayList<>();
+        mainBlocks.add(new SyncBlockChanger(loc.clone().add(3, 1, 0), Blocks.MOSS_BLOCK, false).run());
+        mainBlocks.add(new SyncBlockChanger(loc.clone().add(3, 2, 0), Blocks.MOSS_BLOCK, false).run());
+        mainBlocks.add(new SyncBlockChanger(loc.clone().add(3, 3, 0), Blocks.MOSS_BLOCK, false).run());
+        mainBlocks.add(new SyncBlockChanger(loc.clone().add(3, 4, 0), Blocks.MOSS_BLOCK, false).run());
+
+        for (Block block : mainBlocks) {
+            blockOutput.add(block.getLocation());
+            block.setMetadata("ladderblock", new FixedMetadataValue(InfiniteParkour.getPlugin(), true));
+        }
 
         return blockOutput;
     }
