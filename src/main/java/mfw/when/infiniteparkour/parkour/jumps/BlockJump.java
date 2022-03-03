@@ -1,15 +1,23 @@
 package mfw.when.infiniteparkour.parkour.jumps;
 
 import org.bukkit.Location;
-import org.bukkit.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 import java.security.SecureRandom;
 
+/**
+ * Calculates the new block to be generated based on given conditions.
+ */
 public class BlockJump {
 
     private static final SecureRandom random = new SecureRandom();
 
-    public static Location jump(Location loc) {
+    /**
+     * Gets the new block location based on given conditions.
+     * @param loc the current block location from which the new block location is given.
+     * @return The location of the new block generated
+     */
+    public static Location jump(@NotNull Location loc) {
         int height = getHeight();
         int forwardLength = getForwardLength();
         int sideOffset = getSideOffset();
@@ -17,11 +25,18 @@ public class BlockJump {
         return loc.add(forwardLength, height, sideOffset);
     }
 
+    /**
+     * Gets the offset of the new block location (on the Z axis).
+     * @return offset - the integer offset on the Z axis.
+     */
     private static int getSideOffset() {
-        int offset = random.nextInt(7) - 3;
-        return offset;
+        return random.nextInt(7) - 3;
     }
 
+    /**
+     * Gets the length of the new block location (on the X axis).
+     * @return length - the integer offset on the X axis.
+     */
     private static int getForwardLength() {
         int fdLength = 2 + random.nextInt(2);
 
@@ -34,16 +49,12 @@ public class BlockJump {
         return fdLength;
     }
 
+    /**
+     * Gets the height of the new block location (on the Y axis).
+     * @return height - the integer offset on the Y axis.
+     */
     private static int getHeight() {
-        int height = random.nextInt(3) - 1;
-
-//        if (height == -1) {
-//            int decreaseChance = random.nextInt(100);
-//            if (decreaseChance >= 40) {
-//                height = 0;
-//            }
-//        }
-        return height;
+        return random.nextInt(3) - 1;
     }
 
 }

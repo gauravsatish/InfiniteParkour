@@ -14,8 +14,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+/**
+ * Calculates and sets the blocks to its corresponding type to create a ladder jump.
+ */
 public class LadderJump {
 
+    /**
+     * Calculates and sets the blocks to create a ladder jump based on the given location.
+     * @param loc The location from which the ladder jump is created.
+     * @return An ArrayList containing the locations of all the blocks affected.
+     */
     public static ArrayList<Location> jump(@NotNull Location loc) {
         ArrayList<Location> blockOutput = new ArrayList<>();
 
@@ -59,6 +67,11 @@ public class LadderJump {
         return blockOutput;
     }
 
+    /**
+     * Gets the location of the new block on which the next jump is based off of.
+     * @param loc The location off of which the end block is calculated.
+     * @return Location of the end block of the jump.
+     */
     public static Location getEndBlock(@NotNull Location loc) {
         return loc.clone().add(3, 4, 0);
     }

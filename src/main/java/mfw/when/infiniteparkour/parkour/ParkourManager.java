@@ -51,6 +51,7 @@ public class ParkourManager {
         this.block = SLOT_START_LOC.getBlock();
 
         InfiniteParkour.getPlayerParkourManager().put(player, this);
+        JumpCounterSystem.addPlayer(player);
     }
 
     public static Block getRandomBlockType() {

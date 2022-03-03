@@ -38,7 +38,6 @@ public class SyncBlockChanger {
             BlockState bs = block.defaultBlockState();
             nmsChunk.setBlockState(bp, bs, true, true);
             ClientboundBlockUpdatePacket blockChange = new ClientboundBlockUpdatePacket(bp, this.block.defaultBlockState());
-            InfiniteParkour.getPlugin().getLogger().info("=== SyncBlockChanger XYZ: " + bp.getX() + " " + bp.getY() + " " + bp.getZ());
 
             for (Player player : tmpLoc.getWorld().getPlayers()) {
                 ((CraftPlayer) player).getHandle().connection.send(blockChange);
