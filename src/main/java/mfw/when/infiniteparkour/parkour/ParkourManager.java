@@ -30,7 +30,6 @@ public class ParkourManager {
     private static final String COUNTER_METADATA_VALUE = "counter";
     private static final List<Block> blocks = List.of(Blocks.MOSS_BLOCK, Blocks.MOSSY_COBBLESTONE, Blocks.CRACKED_STONE_BRICKS, Blocks.MOSSY_STONE_BRICKS, Blocks.FLOWERING_AZALEA_LEAVES);
     private final Location SLOT_START_LOC;
-
     private final Player player;
     private final SecureRandom random = new SecureRandom();
     private final Slot slot;
@@ -38,6 +37,7 @@ public class ParkourManager {
     private int counter = 1;
     private org.bukkit.block.Block block;
     private BukkitTask process;
+
 
     public ParkourManager(Player player, Slot slot) {
         this.player = player;
@@ -52,9 +52,6 @@ public class ParkourManager {
         JumpCounterSystem.addPlayer(player);
     }
 
-    public static Block getRandomBlockType() {
-        return blocks.get((int) (Math.random() * blocks.size()));
-    }
 
     public void start() {
         if (!player.isOnline()) return;
@@ -183,6 +180,10 @@ public class ParkourManager {
         }
 
         return loc;
+    }
+
+    public static Block getRandomBlockType() {
+        return blocks.get((int) (Math.random() * blocks.size()));
     }
 
     public Slot getSlot() {
