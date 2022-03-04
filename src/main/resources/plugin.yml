@@ -7,13 +7,3 @@ softdepend:
   - VoidGen
 description: Infinite Parkour Yay
 commands:
-  infiniteparkour:
-    description: Starts the parkour hopefully
-    aliases:
-      - parkour
-  test:
-  reset:
-  tpparkour:
-  leaveparkour:
-    description: Leaves your current parkour session. Only for operators
-    aliases: lvpk

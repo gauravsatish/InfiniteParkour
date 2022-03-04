@@ -4,6 +4,8 @@
  - make database to save scores
  -  highscore stuff
  - make it check height limit as well
+ - make current running block gen processes stop on reset command before resetting slots
+ - use permissions
 
 
 DONE:

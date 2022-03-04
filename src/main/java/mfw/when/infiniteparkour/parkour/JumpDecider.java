@@ -1,8 +1,10 @@
 package mfw.when.infiniteparkour.parkour;
 
+import mfw.when.infiniteparkour.parkour.jumps.JumpType;
+
 import java.security.SecureRandom;
 
-public class JumpGetterIDKWhatToCallThis {
+public class JumpDecider {
 
     private static final SecureRandom secureRandom = new SecureRandom();
 
@@ -13,7 +15,7 @@ public class JumpGetterIDKWhatToCallThis {
         if (index == 1 || index == 2) {
             if (cooldown > 0) return JumpType.values()[0];
 
-            if (secureRandom.nextInt(100) <= 60) return JumpType.values()[0];
+            if (secureRandom.nextInt(100) <= 70) return JumpType.values()[0];
 
             cooldown = 15;
         }

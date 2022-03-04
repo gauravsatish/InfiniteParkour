@@ -1,35 +1,25 @@
 package mfw.when.infiniteparkour.commands;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Subcommand;
 import mfw.when.infiniteparkour.slotsystem.SlotManager;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class ResetCommand implements CommandExecutor {
+@CommandAlias("reset")
+public class ResetCommand extends BaseCommand {
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-
-            if (player.isOp()) {
-                if (args.length == 1) {
-                    if (args[0].equals("slots")) {
-                        player.sendMessage(ChatColor.GREEN + "Slots reset!");
-                        SlotManager.getSlotHashMap().clear();
-//                    } else if (args[0].equals("parkour")){
-//                        SlotManager.getPlayerSlotHashMap().get(player).resetBlocks();
-                    }
-                } else {
-                    player.sendMessage(ChatColor.RED + "Invalid Option");
-                }
+    @Subcommand("slots")
+    public void resetSlots(Player player) {
+        if (player.isOp()) {
+            player.sendMessage(ChatColor.GREEN + "Slots reset!");
+            for (Integer integer : SlotManager.getSlotHashMap().keySet()) {
+                SlotManager.getSlotHashMap().get(integer).getLog().resetBlocks(false);
             }
+            SlotManager.getSlotHashMap().clear();
+        } else {
+            player.sendMessage(ChatColor.RED + "Insufficient Permissions");
         }
-
-        return false;
     }
 }

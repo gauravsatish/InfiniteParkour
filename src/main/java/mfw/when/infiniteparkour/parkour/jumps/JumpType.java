@@ -1,4 +1,4 @@
-package mfw.when.infiniteparkour.parkour;
+package mfw.when.infiniteparkour.parkour.jumps;
 
 public enum JumpType {
     BLOCK,

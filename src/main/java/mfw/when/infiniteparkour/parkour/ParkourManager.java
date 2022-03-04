@@ -1,8 +1,6 @@
 package mfw.when.infiniteparkour.parkour;
 
 import mfw.when.infiniteparkour.InfiniteParkour;
-import mfw.when.infiniteparkour.parkour.JumpCounterSystem;
-import mfw.when.infiniteparkour.parkour.JumpGetterIDKWhatToCallThis;
 import mfw.when.infiniteparkour.parkour.jumps.BlockJump;
 import mfw.when.infiniteparkour.parkour.jumps.LadderJump;
 import mfw.when.infiniteparkour.parkour.jumps.NeoJump;
@@ -36,7 +34,7 @@ public class ParkourManager {
     private final Player player;
     private final SecureRandom random = new SecureRandom();
     private final Slot slot;
-    private final JumpGetterIDKWhatToCallThis jumpGetterIDKWhatToCallThis = new JumpGetterIDKWhatToCallThis();
+    private final JumpDecider jumpDecider = new JumpDecider();
     private int counter = 1;
     private org.bukkit.block.Block block;
     private BukkitTask process;
@@ -65,7 +63,7 @@ public class ParkourManager {
         InfiniteParkour.getPlayerJumpCounter().put(player, 0);
 
         this.block = SLOT_START_LOC.getBlock();
-        jumpGetterIDKWhatToCallThis.setCooldown(20);
+        jumpDecider.setCooldown(20);
         for (int i = 0; i < 3; i++) doBlockJump();
 
         process = new BukkitRunnable() {
@@ -91,9 +89,9 @@ public class ParkourManager {
     public void trigger() {
         InfiniteParkour.getPlayerJumpCounter().put(player, InfiniteParkour.getPlayerJumpCounter().get(player) + 1);
         JumpCounterSystem.update(player);
-        jumpGetterIDKWhatToCallThis.decrementCooldown();
+        jumpDecider.decrementCooldown();
 
-        switch (jumpGetterIDKWhatToCallThis.getNextJumpType()) {
+        switch (jumpDecider.getNextJumpType()) {
             case BLOCK -> doBlockJump();
             case NEO -> doNeoJump();
             case LADDER -> doLadderJump();
@@ -105,7 +103,7 @@ public class ParkourManager {
         this.process.cancel();
         this.block = SLOT_START_LOC.getBlock();
         this.counter = 1;
-        this.jumpGetterIDKWhatToCallThis.reset();
+        this.jumpDecider.reset();
         if (restart) {
             Bukkit.getScheduler().runTaskLater(InfiniteParkour.getPlugin(), () -> start(), 20);
         }
@@ -145,7 +143,7 @@ public class ParkourManager {
             this.playBlockGenAnimation(loc.getBlock());
         }
         org.bukkit.block.Block endBlock = NeoJump.getEndBlock(block.getLocation()).getBlock();
-        for (int i = 5; i <= 7; i++) {
+        for (int i = 0; i >= -2; i--) {
             endBlock.getRelative(i, 0, 0).setMetadata(COUNTER_METADATA_VALUE, new FixedMetadataValue(InfiniteParkour.getPlugin(), counter));
         }
         counter++;
