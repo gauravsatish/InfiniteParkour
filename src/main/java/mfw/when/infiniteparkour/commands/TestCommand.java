@@ -4,9 +4,11 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Description;
+import co.aikar.commands.annotation.Subcommand;
 import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.parkour.InfiniteParkourInstance;
 import mfw.when.infiniteparkour.parkour.ParkourManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -45,6 +47,15 @@ public class TestCommand extends BaseCommand {
             }.runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), 20, 2);
         } else {
             player.sendMessage(ChatColor.RED + "Insufficient permissions.");
+        }
+    }
+    
+    @Subcommand("invsize")
+    public void invSize(Player player, String[] args) {
+        try {
+            player.openInventory(Bukkit.createInventory(player, Integer.parseInt(args[0]), "Test Inventory"));
+        } catch (Exception e) {
+            player.sendMessage("Invalid inventory size");
         }
     }
 

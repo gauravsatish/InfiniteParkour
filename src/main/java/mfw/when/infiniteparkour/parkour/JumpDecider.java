@@ -1,5 +1,6 @@
 package mfw.when.infiniteparkour.parkour;
 
+import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.parkour.jumps.JumpType;
 
 import java.security.SecureRandom;

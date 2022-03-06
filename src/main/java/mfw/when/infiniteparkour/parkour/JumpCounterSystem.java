@@ -43,6 +43,6 @@ public class JumpCounterSystem {
 
     private static TextComponent getMessage(Player player) {
         return new TextComponent(ChatColor.DARK_AQUA + "Score: " + ChatColor.BLACK +
-                InfiniteParkour.getPlayerJumpCounter().get(player) + " jumps");
+                InfiniteParkour.getPlayerScores().get(player) + " jumps");
     }
 }

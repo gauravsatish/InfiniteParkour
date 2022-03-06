@@ -31,15 +31,15 @@ public class SlotManager {
 
     public static void resetPlayer(Player player) {
 
-        if (InfiniteParkour.getPlayerParkourManager().containsKey(player)) {
+        if (InfiniteParkour.getSessions().containsKey(player)) {
 
-            ParkourManager pm = InfiniteParkour.getPlayerParkourManager().get(player);
 
-            pm.getSlot().getLog().resetBlocks(false);
-            pm.getProcess().cancel();
+            ParkourManager pm = InfiniteParkour.getSessions().get(player);
+
+            pm.stop(false, true);
             SlotManager.getSlotHashMap().remove(pm.getSlot().getSlotNumber());
 
-            InfiniteParkour.getPlayerParkourManager().remove(player);
+            InfiniteParkour.getSessions().remove(player);
             JumpCounterSystem.removePlayer(player);
         }
     }

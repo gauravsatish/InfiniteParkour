@@ -1,18 +1,20 @@
 package mfw.when.infiniteparkour;
 
 import co.aikar.commands.PaperCommandManager;
-import mfw.when.infiniteparkour.listeners.LeafDecayListener;
-import mfw.when.infiniteparkour.listeners.PlayerManager;
 import mfw.when.infiniteparkour.commands.ParkourCommand;
 import mfw.when.infiniteparkour.commands.ResetCommand;
 import mfw.when.infiniteparkour.commands.TPParkourCommand;
 import mfw.when.infiniteparkour.commands.TestCommand;
+import mfw.when.infiniteparkour.listeners.LeafDecayListener;
+import mfw.when.infiniteparkour.listeners.PlayerManager;
+import mfw.when.infiniteparkour.listeners.SettingsListener;
 import mfw.when.infiniteparkour.parkour.JumpCounterSystem;
 import mfw.when.infiniteparkour.parkour.ParkourManager;
 import mfw.when.infiniteparkour.slotsystem.Slot;
 import mfw.when.infiniteparkour.slotsystem.SlotManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,23 +23,23 @@ import java.util.HashMap;
 
 public final class InfiniteParkour extends JavaPlugin {
 
-    private PaperCommandManager commandManager;
-
     public static final double PARKOUR_HEIGHT = 100;
-    private static final HashMap<Player, Integer> playerJumpCounter = new HashMap<>();
-    private static final HashMap<Player, ParkourManager> playerParkourManager = new HashMap<>();
+    private static final HashMap<Player, Integer> playerScores = new HashMap<>();
+    private static final HashMap<Player, ParkourManager> sessions = new HashMap<>();
     private static Plugin plugin;
+    private PaperCommandManager commandManager;
+    public static final Material SETTINGS_ITEM = Material.REDSTONE_BLOCK;
 
     public static Plugin getPlugin() {
         return plugin;
     }
 
-    public static HashMap<Player, ParkourManager> getPlayerParkourManager() {
-        return playerParkourManager;
+    public static HashMap<Player, ParkourManager> getSessions() {
+        return sessions;
     }
 
-    public static HashMap<Player, Integer> getPlayerJumpCounter() {
-        return playerJumpCounter;
+    public static HashMap<Player, Integer> getPlayerScores() {
+        return playerScores;
     }
 
 
@@ -50,7 +52,7 @@ public final class InfiniteParkour extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new PlayerManager(), this);
         Bukkit.getPluginManager().registerEvents(new LeafDecayListener(), this);
-        InfiniteParkour.getPlugin().getLogger().info("registered event");
+        Bukkit.getPluginManager().registerEvents(new SettingsListener(), this);
 
         Bukkit.getWorld("world").setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         Bukkit.getWorld("world").setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);

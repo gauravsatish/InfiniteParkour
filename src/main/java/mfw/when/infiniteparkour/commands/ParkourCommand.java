@@ -30,7 +30,7 @@ public class ParkourCommand extends BaseCommand {
     @Description("Stops the parkour")
     public void stop(Player player) {
         if (player.isOp()) {
-            new SyncPlayerTeleport(player, new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT + 1, InfiniteParkour.getPlayerParkourManager().get(player).getSlot().getMiddleZ()[1], -90f, 0f)).run();
+            new SyncPlayerTeleport(player, new Location(player.getWorld(), 0.5, InfiniteParkour.PARKOUR_HEIGHT + 1, InfiniteParkour.getSessions().get(player).getSlot().getMiddleZ()[1], -90f, 0f)).run();
             SlotManager.resetPlayer(player);
         }
     }
