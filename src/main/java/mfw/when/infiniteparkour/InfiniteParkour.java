@@ -28,7 +28,6 @@ public final class InfiniteParkour extends JavaPlugin {
     private static final HashMap<Player, ParkourManager> sessions = new HashMap<>();
     private static Plugin plugin;
     private PaperCommandManager commandManager;
-    public static final Material SETTINGS_ITEM = Material.REDSTONE_BLOCK;
 
     public static Plugin getPlugin() {
         return plugin;

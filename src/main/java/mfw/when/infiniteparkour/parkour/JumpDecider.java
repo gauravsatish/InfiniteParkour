@@ -1,22 +1,21 @@
 package mfw.when.infiniteparkour.parkour;
 
-import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.parkour.jumps.JumpType;
 
-import java.security.SecureRandom;
+import java.util.Random;
 
 public class JumpDecider {
 
-    private static final SecureRandom secureRandom = new SecureRandom();
+    private static final Random random = new Random();
 
     private int cooldown = 0;
 
     public JumpType getNextJumpType() {
-        int index = secureRandom.nextInt(3);
+        int index = random.nextInt(3);
         if (index == 1 || index == 2) {
             if (cooldown > 0) return JumpType.values()[0];
 
-            if (secureRandom.nextInt(100) <= 70) return JumpType.values()[0];
+            if (random.nextInt(100) <= 70) return JumpType.values()[0];
 
             cooldown = 15;
         }
@@ -33,6 +32,7 @@ public class JumpDecider {
             cooldown--;
         }
     }
+
     public void reset() {
         cooldown = 0;
     }
