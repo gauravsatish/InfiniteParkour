@@ -14,6 +14,7 @@ public class BlockJump {
 
     /**
      * Gets the new block location based on given conditions.
+     *
      * @param loc the current block location from which the new block location is given.
      * @return The location of the new block generated
      */
@@ -27,6 +28,7 @@ public class BlockJump {
 
     /**
      * Gets the offset of the new block location (on the Z axis).
+     *
      * @return offset - the integer offset on the Z axis.
      */
     private static int getSideOffset() {
@@ -35,6 +37,7 @@ public class BlockJump {
 
     /**
      * Gets the length of the new block location (on the X axis).
+     *
      * @return length - the integer offset on the X axis.
      */
     private static int getForwardLength() {
@@ -51,6 +54,7 @@ public class BlockJump {
 
     /**
      * Gets the height of the new block location (on the Y axis).
+     *
      * @return height - the integer offset on the Y axis.
      */
     private static int getHeight() {

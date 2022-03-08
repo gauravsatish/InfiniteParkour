@@ -14,6 +14,7 @@ public class NeoJump {
 
     /**
      * Calculates and sets the blocks to create a neo jump based on the given location.
+     *
      * @param loc The location from which the ladder jump is created.
      * @return An ArrayList containing the locations of all the blocks affected.
      */
@@ -36,6 +37,7 @@ public class NeoJump {
 
     /**
      * Gets the location of the new block on which the next jump is based off of.
+     *
      * @param loc The location off of which the end block is calculated.
      * @return Location of the end block of the jump.
      */

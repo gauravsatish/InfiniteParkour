@@ -16,7 +16,6 @@ public class JumpCounterSystem {
     private static BukkitTask process;
 
     public static void start() {
-        InfiniteParkour.getPlugin().getLogger().info("tracker system started");
         process = Bukkit.getScheduler().runTaskTimerAsynchronously(InfiniteParkour.getPlugin(), () -> {
             for (Player player : players) {
                 player.spigot().sendMessage(ChatMessageType.ACTION_BAR, getMessage(player));

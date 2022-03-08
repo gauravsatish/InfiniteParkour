@@ -49,7 +49,7 @@ public class TestCommand extends BaseCommand {
             player.sendMessage(ChatColor.RED + "Insufficient permissions.");
         }
     }
-    
+
     @Subcommand("invsize")
     public void invSize(Player player, String[] args) {
         try {

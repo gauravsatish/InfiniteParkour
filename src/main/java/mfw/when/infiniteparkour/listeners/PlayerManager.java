@@ -1,7 +1,10 @@
 package mfw.when.infiniteparkour.listeners;
 
+import mfw.when.infiniteparkour.InfiniteParkour;
 import mfw.when.infiniteparkour.parkour.InfiniteParkourInstance;
 import mfw.when.infiniteparkour.slotsystem.SlotManager;
+import mfw.when.infiniteparkour.utils.PSettingsStorageUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -28,6 +31,12 @@ public class PlayerManager implements Listener {
         } else {
             e.getPlayer().performCommand("tpparkour");
         }
+
+        Bukkit.getScheduler().runTaskAsynchronously(InfiniteParkour.getPlugin(), () -> {
+            if (PSettingsStorageUtil.findEntry(e.getPlayer().getUniqueId().toString()) == null) {
+                PSettingsStorageUtil.addEntry(e.getPlayer().getUniqueId().toString());
+            }
+        });
     }
 
     @EventHandler
@@ -46,6 +55,13 @@ public class PlayerManager implements Listener {
             if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) {
                 e.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerBan(PlayerQuitEvent e) {
+        if (e.getPlayer().isBanned()) {
+            PSettingsStorageUtil.deleteEntry(e.getPlayer().getUniqueId().toString());
         }
     }
 }

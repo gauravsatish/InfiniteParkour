@@ -21,6 +21,7 @@ public class LadderJump {
 
     /**
      * Calculates and sets the blocks to create a ladder jump based on the given location.
+     *
      * @param loc The location from which the ladder jump is created.
      * @return An ArrayList containing the locations of all the blocks affected.
      */
@@ -34,7 +35,6 @@ public class LadderJump {
             ladder1.setFacing(BlockFace.WEST);
             ladder1Block.setBlockData(ladder1);
             blockOutput.add(ladder1Block.getLocation());
-            InfiniteParkour.getPlugin().getLogger().info("set ladder1 to output array");
 
             Block ladder2Block = loc.clone().add(3, 2, 1).getBlock();
             ladder2Block.setType(Material.LADDER);
@@ -42,7 +42,6 @@ public class LadderJump {
             ladder2.setFacing(BlockFace.SOUTH);
             ladder2Block.setBlockData(ladder2);
             blockOutput.add(ladder2Block.getLocation());
-            InfiniteParkour.getPlugin().getLogger().info("set ladder2 to output array");
 
             Block ladder3block = loc.clone().add(4, 3, 0).getBlock();
             ladder3block.setType(Material.LADDER);
@@ -50,7 +49,6 @@ public class LadderJump {
             ladder3.setFacing(BlockFace.EAST);
             ladder3block.setBlockData(ladder3);
             blockOutput.add(ladder3block.getLocation());
-            InfiniteParkour.getPlugin().getLogger().info("set ladder3 to output array");
         });
 
         ArrayList<Block> mainBlocks = new ArrayList<>();
@@ -69,6 +67,7 @@ public class LadderJump {
 
     /**
      * Gets the location of the new block on which the next jump is based off of.
+     *
      * @param loc The location off of which the end block is calculated.
      * @return Location of the end block of the jump.
      */

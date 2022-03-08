@@ -24,11 +24,11 @@ public class SettingsListener implements Listener {
                 if (e.getCurrentItem() == null) return;
                 if (e.getCurrentItem().getType().equals(SettingsMenu.ladderJumpRepresent)) {
                     ParkourManager manager = InfiniteParkour.getSessions().get(player);
-                    manager.getSettings().setLadderJumps(!manager.getSettings().isLadderJumps());
+                    manager.getSettings().setLadderJumpsEnabled(!manager.getSettings().isLadderJumpsEnabled());
                     manager.getSettings().updateSettings();
                 } else if (e.getCurrentItem().getType().equals(SettingsMenu.neoJumpRepresent)) {
                     ParkourManager manager = InfiniteParkour.getSessions().get(player);
-                    manager.getSettings().setNeoJumps(!manager.getSettings().isNeoJumps());
+                    manager.getSettings().setNeoJumpsEnabled(!manager.getSettings().isNeoJumpsEnabled());
                     manager.getSettings().updateSettings();
                 }
             }

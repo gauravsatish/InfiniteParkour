@@ -40,6 +40,7 @@ public class InfiniteParkourInstance {
 
     /**
      * Gets the player associated with this instance
+     *
      * @return The player associated with this instance
      */
     public Player getPlayer() {
@@ -48,6 +49,7 @@ public class InfiniteParkourInstance {
 
     /**
      * Gets the slot associated with this instance
+     *
      * @return The slot associated with this instance
      */
     public Slot getSlot() {
@@ -56,6 +58,7 @@ public class InfiniteParkourInstance {
 
     /**
      * Gets the parkour manager associated with this instance
+     *
      * @return The parkour manager associated with this instance
      */
     public ParkourManager getParkourManager() {

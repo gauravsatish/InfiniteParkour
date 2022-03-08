@@ -46,7 +46,7 @@ public class ParkourManager {
     private int counter = 1;
     private org.bukkit.block.Block block;
     private BukkitTask process;
-    private PlayerSettings settings;
+    private final PlayerSettings settings;
 
     public ParkourManager(@NotNull Player player, @NotNull Slot slot) {
         this.player = player;
@@ -162,7 +162,7 @@ public class ParkourManager {
             }
             case LADDER -> {
 
-                if (!settings.isLadderJumps()) {
+                if (!settings.isLadderJumpsEnabled()) {
                     InfiniteParkour.getPlugin().getLogger().info("LADDER JUMP DISABLED");
                     doJump(JumpType.BLOCK);
                     return;
@@ -170,7 +170,6 @@ public class ParkourManager {
                 for (Location loc : LadderJump.jump(block.getLocation())) {
                     this.slot.getLog().addBlock(loc.getBlock());
                     if (loc.getBlock().getType().equals(Material.LADDER)) {
-                        InfiniteParkour.getPlugin().getLogger().info("LADDER found in output array");
                     }
                     this.playBlockGenAnimation(loc.getBlock());
                 }
@@ -183,7 +182,7 @@ public class ParkourManager {
             }
             case NEO -> {
 
-                if (!settings.isNeoJumps()) {
+                if (!settings.isNeoJumpsEnabled()) {
                     InfiniteParkour.getPlugin().getLogger().info("NEO JUMP DISABLED");
                     doJump(JumpType.BLOCK);
                     return;
